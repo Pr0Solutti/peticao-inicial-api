@@ -1,0 +1,14 @@
+services:
+  nestjs-app:
+    build: .
+    container_name: nestjs-app
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules  # evita sobrescrever node_modules do container
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - .env
+    command: npm run start:dev
