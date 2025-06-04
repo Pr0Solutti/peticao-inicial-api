@@ -20,7 +20,7 @@ export class AuthController {
       'Set-Cookie',
       serialize('@peticaoinicial:accessToken', accessToken, {
         httpOnly: true,
-        secure: false, // true em produção com HTTPS
+        secure: process.env.NODE_ENV === 'production', // true em produção com HTTPS
         sameSite: 'lax',
         path: '/',
         maxAge: 60 * 60 * 24 * 7, // 7 dias
