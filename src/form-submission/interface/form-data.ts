@@ -8,6 +8,7 @@ export interface FormData {
   reclamadas: Reclamada[];
   temMaisReclamadas: string;
   tipoResposabilidadeEmpresas: string;
+  dataRegistro: string;
   outraResponsabilidadeEmpresa: string;
   trabalhouSemRegistroCTPS: string;
   outraFormaAvisoPrevio: string;
