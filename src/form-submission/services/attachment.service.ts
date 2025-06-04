@@ -163,7 +163,7 @@ ${
       A parte reclamante foi admitida em ${format(formData.dataAdmissaoSemRegistro, 'dd/MM/yyyy', { locale: ptBR })}, tendo sido registrado na função de ${formData.cargoCtps}, porém, efetivamente, exercia as atribuições de ${formData.cargoDesempenhado} desde [00/00/0000], sendo que a empregadora não procedeu a alteração tempestiva da CTPS e/ou o remunerou corretamente.
   </p>
 
-<h2>DOIS CONTRATOS DE TRABALHO(Não identificado no formulário)</h2>
+<h2>DOIS CONTRATOS DE TRABALHO(NÃO_IDENTIFICADO - FORMULÁRIO)</h2>
 <p>
 A parte reclamante foi contratada pela empregadora em dois períodos, sendo estes:
 1º contrato: de 00/00/0000 a 00/00/0000, exercendo as funções de [inserir] quando recebia o salário de R$ 00,00 mensais, acrescido de [inserir], sendo que o contrato foi encerrado mediante [dispensa sem justa causa/dispensa por justa causa/pedido de demissão].
@@ -201,9 +201,9 @@ ${
 }
 ${
   formData.temMaisReclamadas === 'Sim' &&
-  formData.tipoResposabilidadeEmpresas === 'Outros '
+  formData.tipoResposabilidadeEmpresas === 'Outros'
     ? `
-    <h3>RESPONSABILIDADE SOLIDÁRIA – subempreita</h3>
+    <h3>RESPONSABILIDADE SOLIDÁRIA – subempreita(Verificar a responsabilidade - Outros)</h3>
 <p>
 A primeira reclamada é empreiteira da segunda reclamada, razão pela qual, com fundamento no artigo 455 da CLT, devem responder solidariamente pelos direitos que vierem a ser reconhecidos na presente demanda. Todavia, caso esse não seja o entendimento desse Juízo, a segunda reclamada deverá responder <span class="bold">subsidiariamente</span> pelos créditos trabalhistas deferidos ao reclamante na presente demanda, nos termos da Súmula 331, IV do C. TST.
 </p>
@@ -232,18 +232,16 @@ As reclamadas simularam a contratação do reclamante como contrato temporário.
 <p>
 As reclamadas simularam a contratação do reclamante como cooperado. Tendo participado voluntariamente da fraude, a cooperativa deverá responder solidariamente pelos direitos que vierem a ser reconhecidos na presente demanda. Caso não seja este o entendimento de Vossa Excelência, e houver reconhecimento de vínculo de emprego diretamente com a cooperativa, primeira reclamada, na forma da Súmula 331 do C.TST, a segunda reclamada deverá responder subsidiariamente pelos créditos trabalhistas deferidos na presente demanda.
 </p>
-
-<h3>RESPONSABILIDADE – OUTROS</h3>
-<p>
-Conforme informado no formulário, ${formData.outraResponsabilidadeEmpresa}.
-</p>
 `
     : ``
 }
 
 
 <h2 class="section">DAS NULIDADES</h2>
-${formData.trabalhouSemRegistroCTPS === 'Sim' && formData.seguroDesempregoSemRegistro === 'Não' ? `<h3>DA RELAÇÃO DE EMPREGO – RECONHECIMENTO DE VÍNCULO EMPREGATÍCIO - VERBAS SALARIAIS E RESCISÓRIAS</h3>` : ``}
+${
+  formData.trabalhouSemRegistroCTPS === 'Sim' &&
+  formData.seguroDesempregoSemRegistro === 'Não'
+    ? `<h3>DA RELAÇÃO DE EMPREGO – RECONHECIMENTO DE VÍNCULO EMPREGATÍCIO - VERBAS SALARIAIS E RESCISÓRIAS</h3>
 <p>
 Conforme narrado ao tópico do contrato de trabalho, a parte autora prestou serviços sem que houvesse a regularização da sua CTPS, trabalhando sem registro no período de <span class="bold">[puxar dados do contrato]</span>.
 </p>
@@ -304,8 +302,13 @@ A entrega das Guias TRCT com o código 01 para percepção do FGTS depositado, e
     </tr>
   </tbody>
 </table>
+`
+    : ``
+}
 
-${formData.acordoEmpresa === 'Sim' ? `<h3>DA NULIDADE DO “ACORDO” FORMULADO NA COMISSÃO DE CONCILIAÇÃO PRÉVIA</h3>` : ``}
+${
+  formData.acordoEmpresa === 'Sim'
+    ? `<h3>DA NULIDADE DO “ACORDO” FORMULADO NA COMISSÃO DE CONCILIAÇÃO PRÉVIA</h3>
 
 <p>
 Após a dispensa, no ato da homologação da rescisão contratual, a Reclamada se comprometeu a proceder o pagamento ${formData.acordoEmpresa === 'Sim' && formData.valorAcordo ? formData.valorAcordo : ``}. 
@@ -475,8 +478,14 @@ Portanto, deve ser considerada <span class="bold">NULA</span> a quitação total
 <p>
 Seja, assim, declarada <span class="bold">NULA</span> a quitação do contrato de trabalho dada na Comissão de Conciliação Prévia, nos termos dos artigos <span class="bold">9º da CLT</span> e <span class="bold">171, II do Código Civil</span>.
 </p>
+`
+    : ``
+}
 
-${formData.modalidadeDispensa === 'Outros' && formData.teveAnotacaoCtps === 'Não' ? `<h3>NULIDADE DE CONTRATO TEMPORÁRIO / NULIDADE DO CONTRATO POR PRAZO DETERMINADO</h3>` : ``}
+${
+  formData.modalidadeDispensa === 'Outros' &&
+  formData.teveAnotacaoCtps === 'Não'
+    ? `<h3>NULIDADE DE CONTRATO TEMPORÁRIO / NULIDADE DO CONTRATO POR PRAZO DETERMINADO</h3>
 
 <p>
 Embora tenha sido pactuado contrato por prazo determinado/temporário, é certo a empregadora não observou os requisitos de lei, vez que trata-se de uma modalidade de contrato especial que necessita da comprovação da transitoriedade que deu origem a contratação e/ou contrato de experiência. 
@@ -517,7 +526,13 @@ CONTRATO DE EXPERIÊNCIA. AUSÊNCIA DE FORMALIZAÇÃO POR CONTRATO ESCRITO OU AN
 <p>
 Por consequência, com a declaração da nulidade do contrato por prazo determinado e sua conversão para indeterminado, requer a condenação da reclamada ao pagamento das verbas decorrentes da dispensa injusta em contrato por prazo indeterminado, consistentes em aviso prévio e seus reflexos em 13º salário, férias + 1/3 e FGTS e multa de 40%, inclusive sobre a integralidade dos depósitos.
 </p>
-
+`
+    : ``
+}
+${
+  formData.modalidadeDispensa === 'Outros' &&
+  formData.outroTipoDispensa === 'Contrato por cooperativa'
+    ? `
 <h3>COOPERATIVA FRAUDULENTA</h3>
 
 <p>
@@ -540,6 +555,9 @@ De toda forma, pugna-se pela condenação das reclamadas ao pagamento das verbas
 Os valores cobrados a título de adesão ao falso sistema de cooperativa deverão ser restituídos.
 condicoes
 </p>
+`
+    : ``
+}
 ${
   formData.condicoes.includes('Gestante')
     ? `
@@ -558,7 +576,7 @@ ${
     ? `
 <h3>NULIDADE DA DISPENSA – EMPREGADO ACIDENTADO</h3>
 <p>
-O reclamante foi dispensado em período estabilitário, eis que sofreu acidente de trabalho/foi acometido por doença profissional, tendo recebido alta em xx/xx/xx, motivo pelo qual, diante do disposto no artigo 118 da Lei 8.213/91 (cuja constitucionalidade já foi reconhecida na Súmula 378, do C.TST), deve ser declarada a nulidade do ato de dispensa, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período estabilitário, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
+O reclamante foi dispensado em período estabilitário, eis que sofreu acidente de trabalho/foi acometido por doença profissional, tendo recebido alta em [xx/xx/xx], motivo pelo qual, diante do disposto no artigo 118 da Lei 8.213/91 (cuja constitucionalidade já foi reconhecida na Súmula 378, do C.TST), deve ser declarada a nulidade do ato de dispensa, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período estabilitário, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
 </p>
 
 <h3>NULIDADE DA DISPENSA – DOENTE</h3>
@@ -573,7 +591,7 @@ ${
     ? `
 <h3>NULIDADE DA DISPENSA – CIPEIRO</h3>
 <p>
-O reclamante foi dispensado em período estabilitário, eis que foi eleito, em xx/xx/xx, para desempenhar mandato na CIPA. Assim, diante do disposto no artigo 165, da CLT e da Súmula 339, do C.TST, deve ser declarada a nulidade do ato de dispensa, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período estabilitário, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
+O reclamante foi dispensado em período estabilitário, eis que foi eleito, em [xx/xx/xx], para desempenhar mandato na CIPA. Assim, diante do disposto no artigo 165, da CLT e da Súmula 339, do C.TST, deve ser declarada a nulidade do ato de dispensa, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período estabilitário, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
 </p>
   `
     : ``
@@ -583,7 +601,7 @@ ${
     ? `
 <h3>NULIDADE DA DISPENSA – DIRIGENTE SINDICAL</h3>
 <p>
-O reclamante foi dispensado em período estabilitário, eis que foi eleito, em xx/xx/xx, para desempenhar as funções de xxx no sindicato xxxx. Assim, diante do disposto no artigo 543, parágrafo 3º, da CLT, deve ser declarada a nulidade do ato de dispensa, que não observou o disposto na Súmula 379, do C.TST, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período estabilitário, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
+O reclamante foi dispensado em período estabilitário, eis que foi eleito, em [xx/xx/xx], para desempenhar as funções de [xxx] no sindicato [xxxx]. Assim, diante do disposto no artigo 543, parágrafo 3º, da CLT, deve ser declarada a nulidade do ato de dispensa, que não observou o disposto na Súmula 379, do C.TST, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período estabilitário, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
 </p>
   `
     : ``

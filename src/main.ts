@@ -8,10 +8,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('v1');
   app.use(cookieParser());
-  app.enableCors({
-    origin: 'http://localhost:3000', // Ajuste para a URL do seu frontend
-    credentials: true, // Permite envio de cookies e auth headers
-  });
+  app.enableCors();
   await app.listen(3001);
 }
 bootstrap();
