@@ -8,19 +8,26 @@ import { ptBR } from 'date-fns/locale';
 export class AttachmentService {
   async execute(formData: FormData) {
     const salario = parseFloat(
-      formData.ultimoSalario.replace('R$', '').replace(',', '.').trim(),
+      formData?.ultimoSalario?.replace('R$', '').replace(',', '.').trim() ||
+        '0',
     );
     const valorPorFora = parseFloat(
-      formData.valorPorFora.replace('R$', '').replace(',', '.').trim(),
+      formData?.valorPorFora?.replace('R$', '').replace(',', '.').trim() || '0',
     );
     const salarioSubstituicao = parseFloat(
-      formData.salarioSubstituido.replace('R$', '').replace(',', '.').trim(),
+      formData?.salarioSubstituido
+        ?.replace('R$', '')
+        .replace(',', '.')
+        .trim() || '0',
     );
     const valorDevidoTransporte = parseFloat(
-      formData.valorDevidoTransporte.replace('R$', '').replace(',', '.').trim(),
+      formData?.valorDevidoTransporte
+        ?.replace('R$', '')
+        .replace(',', '.')
+        .trim() || '0',
     );
     const valorRecebidoTransporte = parseFloat(
-      formData.valorRecebidoTransporte
+      (formData?.valorRecebidoTransporte || '')
         .replace('R$', '')
         .replace(',', '.')
         .trim(),
@@ -44,7 +51,7 @@ export class AttachmentService {
 </head>
 <body>
 
-<h1>EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) DA VARA DO TRABALHO DE ${formData.cidade.toUpperCase()}/UF</h1>
+<h1>EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) DA VARA DO TRABALHO DE ${(formData.cidade ?? 'CIDADE NÃO INFORMADA').toUpperCase()}/UF</h1>
 
 <p>
   [RECLAMANTE], [nacionalidade], [estado civil],portador do RG nº [XX] SSP/SP, inscrito no CPF sob o nº [XX]  e no PIS sob o nº [XX], portador da CTPS n° [XX], série [XX]/UF, filho de [nome da mãe], nascido aos [dd/mm/aaaa], residente a [Endereço], [nº], [bairro] - [cidade/UF] [(CEP XXXXX)], com contato eletrônico para recebimento de notificações através do e-mail [contato@schsch.com.br], vem, através de sua advogada abaixo assinada, à presença de V. Exa., propor:
@@ -52,10 +59,10 @@ export class AttachmentService {
 <h2> RECLAMAÇÃO TRABALHISTA</h2>
 
 <p>
-  ${formData.reclamadas
+  ${(formData.reclamadas ?? [])
     .map(
       (rec, index) => `
-     ${index !== 0 ? `${index + 1}ª` : `a ser processada pelo RITO ORDINÁRIO, em face de`}  <span class="bold">${rec.nome}</span>, pessoa jurídica de direito privado e/ou público, devidamente inscrita no CNPJ sob o nº  ${rec.cnpj}, estabelecida na [Endereço], [nº], [bairro] - [cidade/UF] [(CEP XXXXX)], com endereço eletrônico através do e-mail: [inserir] e telefone [inserir], ${index === 0 ? `e subsidiariamente` : formData.reclamadas.length === index + 1 ? `pelos motivos de fato e de direito adiante expendidos:` : ``}`,
+     ${index !== 0 ? `${index + 1}ª` : `a ser processada pelo RITO ORDINÁRIO, em face de`}  <span class="bold">${rec.nome}</span>, pessoa jurídica de direito privado e/ou público, devidamente inscrita no CNPJ sob o nº  ${rec.cnpj}, estabelecida na [Endereço], [nº], [bairro] - [cidade/UF] [(CEP XXXXX)], com endereço eletrônico através do e-mail: [inserir] e telefone [inserir], ${index === 0 ? `e subsidiariamente` : formData.reclamadas && formData.reclamadas.length === index + 1 ? `pelos motivos de fato e de direito adiante expendidos:` : ``}`,
     )
     .join('<br>')}
 </p>
@@ -68,8 +75,8 @@ Início do tópico - geral${formData.modalidadeDispensa === `Outros` ? `("Verifi
 </h3>
 <p>
   
-A parte reclamante foi contratada em <span class="bold">${format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>, exercendo por último a função de <span class="bold">${formData.cargoCtps.toUpperCase()}</span>, sob a remuneração de <span class="bold">${formData.ultimoSalario} </span> por mês, 
-acrescido de <span class="bold">${formData.adicionais.map((adc) => adc.toUpperCase()).join('/')}</span>, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>. 
+A parte reclamante foi contratada em <span class="bold">${formData?.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>, exercendo por último a função de <span class="bold">${formData.cargoCtps && formData.cargoCtps.toUpperCase()}</span>, sob a remuneração de <span class="bold">${formData.ultimoSalario} </span> por mês, 
+acrescido de <span class="bold">${formData.adicionais && formData.adicionais.map((adc) => adc.toUpperCase()).join('/')}</span>, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>. 
 </p>
 <p>Em razão do cargo, competia a parte autora as seguintes atribuições ${formData.atividadesDesempenhadas}.</p>
 
@@ -79,7 +86,7 @@ ${
     ? `
   <h2>SEM REGISTRO</h2>
 <p>
-A parte reclamante foi admitida em <span class="bold">${format(formData.dataAdmissaoSemRegistro, 'dd/MM/yyyy', { locale: ptBR })}</span>, sem registro em sua CTPS, exercendo por último a função de <span class="bold">${formData.cargoCtps.toUpperCase()}</span>, sob a remuneração de ${formData.ultimoSalario} por mês, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>.
+A parte reclamante foi admitida em <span class="bold">${format(formData.dataAdmissaoSemRegistro, 'dd/MM/yyyy', { locale: ptBR })}</span>, sem registro em sua CTPS, exercendo por último a função de <span class="bold">${formData.cargoCtps && formData.cargoCtps.toUpperCase()}</span>, sob a remuneração de ${formData.ultimoSalario} por mês, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>.
 </p>
 `
     : ``
@@ -101,14 +108,14 @@ ${
     ? `
 <p>
   <h2>SEM JUSTA CAUSA – AVISO PRÉVIO INDENIZADO</h2>
-O contrato de trabalho se encerrou mediante dispensa, sem justa causa, pelo empregador em ${format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}, com aviso prévio indenizado ${formData.anotacaoCtpsAvisoPrevio === 'Sim' ? `, projetando seu contrato de trabalho até <span class="bold">${format(formData.dataDispensaAvisoPrevio, 'dd/MM/yyyy', { locale: ptBR })}, nos termos da Lei 12.506/2011</span>` : ``}.
+O contrato de trabalho se encerrou mediante dispensa, sem justa causa, pelo empregador em ${formData.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}, com aviso prévio indenizado ${formData.anotacaoCtpsAvisoPrevio === 'Sim' ? `, projetando seu contrato de trabalho até <span class="bold">${format(formData.dataDispensaAvisoPrevio, 'dd/MM/yyyy', { locale: ptBR })}, nos termos da Lei 12.506/2011</span>` : ``}.
 </p>
   `
     : formData.modalidadeDispensa === 'Sem justa causa' &&
         formData.avisoPrevio === 'Trabalhado'
       ? `<h2>SEM JUSTA CAUSA – AVISO PRÉVIO TRABALHADO</h2>
 <p>
-O contrato de trabalho se encerrou mediante dispensa, sem justa causa, em ${format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })} ${
+O contrato de trabalho se encerrou mediante dispensa, sem justa causa, em ${formData.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })} ${
           formData.anotacaoCtpsAvisoPrevio === 'Sim'
             ? `, com aviso prévio trabalhado até ${format(formData.dataDispensaAvisoPrevio, 'dd/MM/yyyy', { locale: ptBR })} e, projeção do aviso prévio indenizado até ${format(formData.dataDispensaAvisoPrevio, 'dd/MM/yyyy', { locale: ptBR })}, nos termos da Lei 12.506/2011.
 </p>
@@ -133,7 +140,7 @@ ${
     ? `
   <h2>PEDIDO DE DEMISSÃO – AVISO PRÉVIO NÃO CUMPRIDO</h2>
   <p>
-    O contrato de trabalho se encerrou mediante pedido de demissão pelo empregado aos ${format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}, não tendo cumprido o aviso prévio.
+    O contrato de trabalho se encerrou mediante pedido de demissão pelo empregado aos ${formData.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}, não tendo cumprido o aviso prévio.
   </p>`
     : ''
 }
@@ -143,7 +150,7 @@ ${
     ? `
   <h2>PEDIDO DE DEMISSÃO – AVISO PRÉVIO CUMPRIDO</h2>
   <p>
-    O contrato de trabalho se encerrou mediante pedido de demissão pelo empregado aos ${format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}, tendo cumprido o aviso prévio de forma trabalhada até ${format(formData.dataDispensaAvisoPrevio, 'dd/MM/yyyy')}.
+    O contrato de trabalho se encerrou mediante pedido de demissão pelo empregado aos ${formData.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}, tendo cumprido o aviso prévio de forma trabalhada até ${formData.dataDispensa && format(formData.dataDispensaAvisoPrevio, 'dd/MM/yyyy')}.
   </p>`
     : ''
 }
@@ -152,7 +159,7 @@ ${
     ? `
   <h2>JUSTA CAUSA</h2>
   <p>
-    O contrato de trabalho foi extinto mediante demissão por justa causa em ${format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}, sob a alegação de <span class="bold">${formData.motivoJustaCausa || 'FALTA ATRIBUTO_MOTIVO_JUSTA_CAUSA'}</span>.
+    O contrato de trabalho foi extinto mediante demissão por justa causa em ${formData.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}, sob a alegação de <span class="bold">${formData.motivoJustaCausa || 'FALTA ATRIBUTO_MOTIVO_JUSTA_CAUSA'}</span>.
     ${formData.advertenciaJustaCausa === 'Sim' ? 'Importante destacar que o reclamante recebeu advertências prévias.' : ''}
   </p>`
     : ''
@@ -160,7 +167,7 @@ ${
 
 <h2>SEM JUSTA CAUSA – RETIFICAÇÃO DA CTPS</h2>
   <p>
-      A parte reclamante foi admitida em ${format(formData.dataAdmissaoSemRegistro, 'dd/MM/yyyy', { locale: ptBR })}, tendo sido registrado na função de ${formData.cargoCtps}, porém, efetivamente, exercia as atribuições de ${formData.cargoDesempenhado} desde [00/00/0000], sendo que a empregadora não procedeu a alteração tempestiva da CTPS e/ou o remunerou corretamente.
+      A parte reclamante foi admitida em ${formData.dataAdmissaoSemRegistro && format(formData.dataAdmissaoSemRegistro, 'dd/MM/yyyy', { locale: ptBR })}, tendo sido registrado na função de ${formData.cargoCtps}, porém, efetivamente, exercia as atribuições de ${formData.cargoDesempenhado} desde [00/00/0000], sendo que a empregadora não procedeu a alteração tempestiva da CTPS e/ou o remunerou corretamente.
   </p>
 
 <h2>DOIS CONTRATOS DE TRABALHO(NÃO_IDENTIFICADO - FORMULÁRIO)</h2>
@@ -559,7 +566,7 @@ condicoes
     : ``
 }
 ${
-  formData.condicoes.includes('Gestante')
+  formData.condicoes && formData.condicoes.includes('Gestante')
     ? `
 <h3>NULIDADE DA DISPENSA – EMPREGADA GRÁVIDA</h3>
 <p>
@@ -570,6 +577,7 @@ A reclamante foi dispensada quando se encontrava grávida, conforme documentaç�
 }
 
 ${
+  formData.condicoes &&
   formData.condicoes.includes(
     'Dentro do período de estabilidade do acidente/doença? (12 meses após a alta médica)',
   )
@@ -872,7 +880,7 @@ A entrega das Guias/TRCT com o código 01 para percepção do FGTS depositado e 
     : ``
 }
 ${
-  formData.adicionais.length > 0
+  formData.adicionais && formData.adicionais.length > 0
     ? `
 <h3>Dos acréscimos na remuneração ${formData.adicionais.map((adicional) => adicional).join('/')}</h3>
   ${
@@ -2054,7 +2062,7 @@ ${
      <h3>DA MULTA DO ART. 477 DA CLT</h3>
     
     <p>
-    O Reclamante foi dispensado sem justa causa aos ${formData.dataDispensa}, com projeção do aviso prévio indenizado até ${formData.dataDispensaAvisoPrevio}.
+    O Reclamante foi dispensado sem justa causa aos ${formData?.dataDispensa ? formData.dataDispensa.toString() : 'data não informada'}, com projeção do aviso prévio indenizado até ${formData.dataDispensaAvisoPrevio ? formData.dataDispensaAvisoPrevio.toString() : 'data não informada'}.
     </p>
     <p>
     Ocorre que, fora violado o prazo previsto no § 6º do art. 477 da CLT, para a homologação da rescisão contratual e fornecimento dos documentos hábeis ao saque do FGTS e recebimento do Seguro-Desemprego, conforme constou da ressalva no TRCT (doc. anexo), pelo que, o Reclamante tem direito à multa do § 8º do mesmo artigo.
@@ -2704,8 +2712,8 @@ Portanto, requer-se a condenação da Reclamada à <span class="bold">restituiç
 
 ${
   formData.adicionaisRecebidos === 'Sim' &&
-  (formData.adicionais.includes('Insalubridade') ||
-    formData.adicionais.includes('Periculosidade'))
+  ((formData.adicionais && formData.adicionais.includes('Insalubridade')) ||
+    (formData.adicionais && formData.adicionais.includes('Periculosidade')))
     ? `
   <p>
   Por oportuno, requer seja determinada a realização de perícia técnica para apuração de insalubridade/periculosidade. 

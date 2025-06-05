@@ -1,11 +1,10 @@
 export interface Reclamada {
-  nome: string;
-  cnpj: string;
+  nome?: string;
+  cnpj?: string;
 }
 export interface FormData {
-  // STEP 1
-  cidade: string;
-  reclamadas: Reclamada[];
+  cidade?: string;
+  reclamadas?: Array<{ nome?: string; cnpj?: string }>;
   temMaisReclamadas: string;
   tipoResposabilidadeEmpresas: string;
   dataRegistro: string;
@@ -25,7 +24,7 @@ export interface FormData {
   advertenciaJustaCausa: string;
   nulidadeJustaCausa: string;
   teveAnotacaoCtps: string;
-  dataDispensa: string;
+  dataDispensa?: Date;
   avisoPrevio: string;
   descricaoAvisoPrevio: string;
   anotacaoCtpsAvisoPrevio: string;
@@ -45,12 +44,12 @@ export interface FormData {
   valorAcordo: string;
 
   feriasVencidas: string;
-  cargoCtps: string;
-  atividadesDesempenhadas: string;
+  cargoCtps?: string;
+  atividadesDesempenhadas?: string;
   desvioFuncao: string;
   cargoDesempenhado: string;
   atividadesDesvio: string;
-  ultimoSalario: string;
+  ultimoSalario?: string;
   salarioMenorMinimo: string;
   salarioMenorPiso: string;
   salarioAtrasado: string;
@@ -61,11 +60,11 @@ export interface FormData {
   valorTotalDescontosHolerite: string;
   pagamentoPorFora: string;
   frequenciaPorFora: string;
-  valorPorFora: string;
+  valorPorFora?: string;
   formaPagamentoPorFora: string;
   outraFormaPagamentoPorFora: string;
   adicionaisRecebidos: string;
-  adicionais: string[];
+  adicionais?: string[];
   riscoInsalubridade: string;
   descricaoAtividadesInsalubridade: string;
   riscoPericulosidade: string;
@@ -86,7 +85,7 @@ export interface FormData {
   nomeSubstituido: string;
   cargoSubstituido: string;
   dataAdmissaoSubstituido: string;
-  salarioSubstituido: string;
+  salarioSubstituido?: string;
   periodoSubstituicao: string;
   motivoSubstituicao: string;
   recebiaPremiacao: string;
@@ -151,8 +150,8 @@ export interface FormData {
   beneficios: string[];
   valorRecebidoAlimentacao: string;
   valorDevidoAlimentacao: string;
-  valorDevidoTransporte: string;
-  valorRecebidoTransporte: string;
+  valorDevidoTransporte?: string;
+  valorRecebidoTransporte?: string;
   valorDevidoPLRPPR: string;
   valorRecebidoPLRPPR: string;
   descricaoBeneficioOutros: string;

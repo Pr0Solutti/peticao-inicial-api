@@ -34,10 +34,9 @@ export class AuthController {
       serialize('@peticaoinicial:accessToken', accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production', // true em produção com HTTPS
-        sameSite: 'none',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         path: '/',
         maxAge: 60 * 60 * 24 * 7, // 7 dias,
-        domain: '.up.railway.app',
       }),
     );
 
