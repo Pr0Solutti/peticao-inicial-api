@@ -9,10 +9,7 @@ async function bootstrap() {
   app.setGlobalPrefix('v1');
   app.use(cookieParser());
   app.enableCors({
-    origin: [
-      'https://peticao-inicial-form-app-production.up.railway.app/',
-      'http://localhost:3000',
-    ],
+    origin: true,
     credentials: true, // Permite o envio de cookies
   });
   await app.listen(3001);
