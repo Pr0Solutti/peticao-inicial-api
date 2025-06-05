@@ -1,8 +1,21 @@
-import { Body, Controller, HttpCode, Post, Res } from '@nestjs/common';
-import { AuthService } from './services/auth.service';
-import { AuthDto } from './dto/auth.dto';
-import { Response } from 'express';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { serialize } from 'cookie';
+import { Response } from 'express';
+import { UserRolesEnum } from 'src/user/types/user.types';
+import { Role } from './decorators/role.decorato';
+import { AuthDto } from './dto/auth.dto';
+import { RoleGuard } from './guards/jwt-auth.guard';
+import { AuthService } from './services/auth.service';
 
 @Controller('auth')
 export class AuthController {
@@ -28,5 +41,11 @@ export class AuthController {
     );
 
     return { message: 'Login successful' };
+  }
+  @Get('me')
+  @UseGuards(AuthGuard(), RoleGuard)
+  @Role(UserRolesEnum.ADMIN, UserRolesEnum.LAWYER)
+  getProfile(@Req() req: { user: { id: string; role: UserRolesEnum } }) {
+    return req.user;
   }
 }
