@@ -38,18 +38,30 @@ export class AttachmentService {
 <h1>EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) DA VARA DO TRABALHO DE ${(formData.cidade ?? 'CIDADE NÃO INFORMADA').toUpperCase()}/UF</h1>
 
 <p>
-  [RECLAMANTE], [nacionalidade], [estado civil],portador do RG nº [XX] SSP/SP, inscrito no CPF sob o nº [XX]  e no PIS sob o nº [XX], portador da CTPS n° [XX], série [XX]/UF, filho de [nome da mãe], nascido aos [dd/mm/aaaa], residente a [Endereço], [nº], [bairro] - [cidade/UF] [(CEP XXXXX)], com contato eletrônico para recebimento de notificações através do e-mail [contato@schsch.com.br], vem, através de sua advogada abaixo assinada, à presença de V. Exa., propor:
+  ${formData.nomeReclamada ?? 'NOME NÃO INFORMADO'},
+  ${formData.nacionalidadeReclamada ?? 'NACIONALIDADE NÃO INFORMADA'},
+  ${formData.estadoCivilReclamada ?? 'ESTADO CIVIL NÃO INFORMADO'}, portador(a) do RG nº ${formData.rgReclamada ?? 'RG NÃO INFORMADO'} SSP/${formData.ufReclamada ?? 'UF NÃO INFORMADA'}, inscrito(a) no CPF sob o nº 
+  ${formData.cpfReclamada ?? 'CPF NÃO INFORMADO'} e no PIS sob o nº ${formData.pisReclamada ?? 'PIS NÃO INFORMADO'}, portador(a) da CTPS nº ${formData.ctpsNumeroReclamada ?? 'CTPS NÃO INFORMADO'}, 
+  série ${formData.ctpsSerieReclamada ?? 'SERIE NÃO INFORMADA'}, filho(a) de ${formData.nomeMaeReclamada ?? 'MÁE NÃO INFORMADA'}, nascido(a) aos ${formData.dataNascimentoReclamada ?? 'DATA NÃO INFORMADA'}, 
+  residente à ${formData.enderecoReclamada ?? 'ENDERECO NÃO INFORMADO'}, 
+  ${formData.bairroReclamada ?? 'BAIRRO NÃO INFORMADO'} - ${formData.cidadeReclamada ?? 'CIDADE NÃO INFORMADA'}/${formData.ufReclamada ?? 'UF NÃO INFORMADA'} (CEP ${formData.cepReclamada ?? 'CEP NÃO INFORMADO'}), com contato eletrônico 
+  para recebimento de notificações através do e-mail ${formData.emailReclamada ?? 'E-MAIL NÃO INFORMADO'}, vem, através de sua advogada abaixo assinada, à presença de V. Exa., propor:
 </p>
+
 <h2> RECLAMAÇÃO TRABALHISTA</h2>
 
 <p>
   ${(formData.reclamadas ?? [])
     .map(
       (rec, index) => `
-     ${index !== 0 ? `${index + 1}ª` : `a ser processada pelo RITO ORDINÁRIO, em face de`}  <span class="bold">${rec.nome}</span>, pessoa jurídica de direito privado e/ou público, devidamente inscrita no CNPJ sob o nº  ${rec.cnpj}, estabelecida na [Endereço], [nº], [bairro] - [cidade/UF] [(CEP XXXXX)], com endereço eletrônico através do e-mail: [inserir] e telefone [inserir], ${index === 0 ? `e subsidiariamente` : formData.reclamadas && formData.reclamadas.length === index + 1 ? `pelos motivos de fato e de direito adiante expendidos:` : ``}`,
+        ${index !== 0 ? `${index + 1}ª` : `a ser processada pelo RITO ORDINÁRIO, em face de`}  
+        <span class="bold">${rec.nome}</span>, pessoa jurídica de direito privado e/ou público, devidamente inscrita no CNPJ sob o nº ${rec.cnpj}, estabelecida na ${rec.endereco}, ${rec.bairro} - ${rec.cidade}/${rec.uf} (CEP ${rec.cep}), com endereço eletrônico através do e-mail: ${rec.email} e telefone ${rec.telefone}, 
+        ${index === 0 ? `e subsidiariamente` : formData.reclamadas && formData.reclamadas.length === index + 1 ? `pelos motivos de fato e de direito adiante expendidos:` : ``}
+      `,
     )
     .join('<br>')}
 </p>
+
 
 <h2>DOS FATOS
 DO CONTRATO DE TRABALHO
@@ -59,7 +71,7 @@ Início do tópico - geral${formData.modalidadeDispensa === `Outros` ? `("Verifi
 </h3>
 <p>
   
-A parte reclamante foi contratada em <span class="bold">${formData?.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>, exercendo por último a função de <span class="bold">${formData.cargoCtps && formData.cargoCtps.toUpperCase()}</span>, sob a remuneração de <span class="bold">${formData.ultimoSalario} </span> por mês, 
+A parte reclamante foi contratada em <span class="bold">${formData?.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>, exercendo por último a função de <span class="bold">${formData.cargoCtps && formData.cargoCtps.toUpperCase()}</span>, sob a remuneração de <span class="bold">R$ ${formData.ultimoSalario} </span> por mês, 
 acrescido de <span class="bold">${formData.adicionais && formData.adicionais.map((adc) => adc.toUpperCase()).join('/')}</span>, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>. 
 </p>
 <p>Em razão do cargo, competia a parte autora as seguintes atribuições ${formData.atividadesDesempenhadas}.</p>
@@ -70,7 +82,7 @@ ${
     ? `
   <h2>SEM REGISTRO</h2>
 <p>
-A parte reclamante foi admitida em <span class="bold">${format(formData.dataAdmissaoSemRegistro, 'dd/MM/yyyy', { locale: ptBR })}</span>, sem registro em sua CTPS, exercendo por último a função de <span class="bold">${formData.cargoCtps && formData.cargoCtps.toUpperCase()}</span>, sob a remuneração de ${formData.ultimoSalario} por mês, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>.
+A parte reclamante foi admitida em <span class="bold">${format(formData.dataAdmissaoSemRegistro, 'dd/MM/yyyy', { locale: ptBR })}</span>, sem registro em sua CTPS, exercendo por último a função de <span class="bold">${formData.cargoCtps && formData.cargoCtps.toUpperCase()}</span>, sob a remuneração de R$ ${formData.ultimoSalario} por mês, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>.
 </p>
 `
     : ``
@@ -80,7 +92,7 @@ ${
     ? `
   <h2>COM PERÍODO SEM REGISTRO </h2>
 <p>
-A parte reclamante foi admitida em <span class="bold">${formData?.dataAdmissaoSemRegistro && format(formData.dataAdmissaoSemRegistro, 'dd/MM/yyyy', { locale: ptBR })}</span>, apenas tendo sido registrada na CTPS em <span class="bold">${formData.dataRegistro && format(formData.dataRegistro, 'dd/MM/yyyy', { locale: ptBR })}</span>, exercendo por último a função de ${formData.cargoCtps && formData.cargoCtps.toUpperCase()}, sob a remuneração de ${formData?.ultimoSalario} por mês, acrescido de 30% do adicional de periculosidade e produção, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>.
+A parte reclamante foi admitida em <span class="bold">${formData?.dataAdmissaoSemRegistro && format(formData.dataAdmissaoSemRegistro, 'dd/MM/yyyy', { locale: ptBR })}</span>, apenas tendo sido registrada na CTPS em <span class="bold">${formData.dataRegistro && format(formData.dataRegistro, 'dd/MM/yyyy', { locale: ptBR })}</span>, exercendo por último a função de ${formData.cargoCtps && formData.cargoCtps.toUpperCase()}, sob a remuneração de R$ ${formData?.ultimoSalario} por mês, acrescido de 30% do adicional de periculosidade e produção, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.dataDispensa && format(formData.dataDispensa, 'dd/MM/yyyy', { locale: ptBR })}</span>.
 </p>
 `
     : ``
@@ -302,7 +314,7 @@ ${
     ? `<h3>DA NULIDADE DO “ACORDO” FORMULADO NA COMISSÃO DE CONCILIAÇÃO PRÉVIA</h3>
 
 <p>
-Após a dispensa, no ato da homologação da rescisão contratual, a Reclamada se comprometeu a proceder o pagamento ${formData.acordoEmpresa === 'Sim' && formData.valorAcordo ? formData.valorAcordo : ``}. 
+Após a dispensa, no ato da homologação da rescisão contratual, a Reclamada se comprometeu a proceder o pagamento R$ ${formData.acordoEmpresa === 'Sim' && formData.valorAcordo ? formData.valorAcordo : ``}. 
 </p>
 
 <p>
@@ -377,7 +389,7 @@ Essa transação foi feita perante a Comissão de Conciliação Prévia, não co
 </p>
 
 <p>
-Repetindo, o valor aproximado de ${formData.valorAcordo ? formData.valorAcordo : `[repercutir valor do acordo]`} pago pela primeira reclamada nesse negócio jurídico é IRRISÓRIO e ÍNFIMO frente ao valor que o reclamante faz jus, causando uma ruptura do equilíbrio contratual. Ademais, vale ressaltar a inexperiência do obreiro, pois não tinha conhecimentos técnicos ou habilidades relativas à natureza da transação. 
+Repetindo, o valor aproximado de R$ ${formData.valorAcordo ? formData.valorAcordo : `[repercutir valor do acordo]`} pago pela primeira reclamada nesse negócio jurídico é IRRISÓRIO e ÍNFIMO frente ao valor que o reclamante faz jus, causando uma ruptura do equilíbrio contratual. Ademais, vale ressaltar a inexperiência do obreiro, pois não tinha conhecimentos técnicos ou habilidades relativas à natureza da transação. 
 </p>
 
 
@@ -392,7 +404,7 @@ Como dito, após a dispensa, a Reclamada se comprometeu a proceder o pagamento d
 </p>
 
 <p>
-Naquela oportunidade, com um valor já previamente determinado, sem possibilidade de negociação, foi informado que lhe seria pago um valor para reembolsá-lo de descontos indevidos e horas extras relativas ao último mês de trabalho. No entanto, para que lhe fosse paga a mencionada quantia, obrigatoriamente deveria assinar alguns documentos, consistentes num “acordo” proposto, cujo respectivo valor não guarda qualquer proporção entre o valor devido e o recebido pelo obreiro, eis que recebera o ínfimo valor aproximado de <span class="bold">${formData.valorAcordo ? formData.valorAcordo : `[repercutir valor do acordo]`}</span>.
+Naquela oportunidade, com um valor já previamente determinado, sem possibilidade de negociação, foi informado que lhe seria pago um valor para reembolsá-lo de descontos indevidos e horas extras relativas ao último mês de trabalho. No entanto, para que lhe fosse paga a mencionada quantia, obrigatoriamente deveria assinar alguns documentos, consistentes num “acordo” proposto, cujo respectivo valor não guarda qualquer proporção entre o valor devido e o recebido pelo obreiro, eis que recebera o ínfimo valor aproximado de <span class="bold">R$ ${formData.valorAcordo ? formData.valorAcordo : `[repercutir valor do acordo]`}</span>.
 </p>
 
 <p>
@@ -2062,7 +2074,7 @@ ${
   <h3>DO ALUGUEL DO VEÍCULO</h3>
     
     <p>
-    Restou combinado entre as partes que, como o Reclamante trabalhava com veículo próprio, a Reclamada pagaria aluguel do veículo no valor de ${formData.valorPrometidoVeiculo} mensais.
+    Restou combinado entre as partes que, como o Reclamante trabalhava com veículo próprio, a Reclamada pagaria aluguel do veículo no valor de R$ ${formData.valorPrometidoVeiculo} mensais.
     </p>
     <p>
     O que, de fato, não foi cumprido integralmente pela Reclamada. Cumpre registrar que, tal irregularidade perdurou durante todo o contrato.
@@ -2074,7 +2086,7 @@ ${
     É certo que a Reclamada deveria disponibilizar as ferramentas necessárias para a realização do trabalho do obreiro, pois o risco da atividade é da empresa, conforme artigo 2º da CLT, não podendo arcar o próprio trabalhador para o trabalho.
     </p>
     <p>
-    Portanto, a Reclamada deve ser condenada a pagar ao Reclamante os valores mensais durante todo o contrato de trabalho, referente aos alugueres do veículo, no valor de ${formData.valorPrometidoVeiculo} mensais.
+    Portanto, a Reclamada deve ser condenada a pagar ao Reclamante os valores mensais durante todo o contrato de trabalho, referente aos alugueres do veículo, no valor de R$ ${formData.valorPrometidoVeiculo} mensais.
     </p>`
     : ``
 }
@@ -2085,7 +2097,7 @@ ${
   <h3>DIFERENÇAS DE ALUGUEL DE VEÍCULO</h3>
     
     <p>
-    Durante todo o pacto laboral, o Reclamante utilizou de seu veículo próprio para a execução dos serviços, sendo certo que a Reclamada realizava o pagamento mensal no valor de ${formData.valorAluguelVeiculo}.
+    Durante todo o pacto laboral, o Reclamante utilizou de seu veículo próprio para a execução dos serviços, sendo certo que a Reclamada realizava o pagamento mensal no valor de R$ ${formData.valorAluguelVeiculo}.
     </p>
     <p>
     Entretanto, a previsão do Anexo I da CCT do sindicato do Reclamante (anexo) dispõe que o valor devido ao veículo de ano similar ao carro do Reclamante seria de R$ 536,61 mensais no ano de 2018/2019 e R$ 558,07 mensais no ano de 2019/2021.
@@ -2107,7 +2119,7 @@ Quando da contratação, a 1ª Reclamada impôs ao obreiro, como condição para
 </p>
 
 <p>
-Sem alternativa, o Reclamante teve que alugar uma garagem para essa finalidade, arcando com despesas mensais no valor de <span class="bold"> ${formData.valorAluguelGaragem || '110,00'}</span> (conforme contrato anexo).
+Sem alternativa, o Reclamante teve que alugar uma garagem para essa finalidade, arcando com despesas mensais no valor de <span class="bold">R$ ${formData.valorAluguelGaragem || '110,00'}</span> (conforme contrato anexo).
 </p>
 
 <p>
@@ -2115,7 +2127,7 @@ Entretanto, tais valores devem ser <span class="bold">integralmente restituídos
 </p>
 
 <p>
-Portanto, requer-se que a Reclamada seja compelida a restituir os valores pagos pelo Reclamante a título de aluguel de garagem, no importe de <span class="bold">${formData.valorAluguelGaragem || '110,00'}</span> mensais, durante todo o pacto laboral, com a devida atualização monetária e juros legais.
+Portanto, requer-se que a Reclamada seja compelida a restituir os valores pagos pelo Reclamante a título de aluguel de garagem, no importe de <span class="bold">R$ ${formData.valorAluguelGaragem || '110,00'}</span> mensais, durante todo o pacto laboral, com a devida atualização monetária e juros legais.
 </p>
   `
     : ``
@@ -2143,7 +2155,7 @@ Isso porque, o valor fornecido ao Reclamante para o abastecimento do veículo <s
 </p>
 
 <p>
-Dessa forma, o Reclamante teve que arcar com o custo da diferença de seu próprio bolso, no valor médio de <span class="bold">${formData.valorGastoReclamante || 'R$ 200,00'}</span> mensais.
+Dessa forma, o Reclamante teve que arcar com o custo da diferença de seu próprio bolso, no valor médio de <span class="bold">R$ ${formData.valorGastoReclamante || 'R$ 200,00'}</span> mensais.
 </p>
 
 <p>
@@ -2151,7 +2163,7 @@ Tal conduta viola o art. 468 da CLT, que veda qualquer alteração lesiva ao con
 </p>
 
 <p>
-Portanto, requer-se a condenação da Reclamada ao pagamento do reembolso das despesas com combustível suportadas pelo Reclamante durante todo o período contratual, no valor médio de <span class="bold">${formData.valorGastoReclamante || 'R$ 200,00'}</span> mensais, com correção monetária e juros legais.
+Portanto, requer-se a condenação da Reclamada ao pagamento do reembolso das despesas com combustível suportadas pelo Reclamante durante todo o período contratual, no valor médio de <span class="bold">R$ ${formData.valorGastoReclamante || 'R$ 200,00'}</span> mensais, com correção monetária e juros legais.
 </p>
 
   `

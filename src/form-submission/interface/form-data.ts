@@ -1,10 +1,33 @@
 export interface Reclamada {
   nome?: string;
   cnpj?: string;
+  endereco?: string;
+  bairro?: string;
+  cidade?: string;
+  uf?: string;
+  cep?: string;
+  email?: string;
+  telefone?: string;
 }
 export interface FormData {
+  nomeReclamada: string;
+  nacionalidadeReclamada: string;
+  estadoCivilReclamada: string;
+  rgReclamada: string;
+  cpfReclamada: string;
+  pisReclamada: string;
+  ctpsNumeroReclamada: string;
+  ctpsSerieReclamada: string;
+  nomeMaeReclamada: string;
+  dataNascimentoReclamada: string;
+  enderecoReclamada: string;
+  bairroReclamada: string;
+  cidadeReclamada: string;
+  ufReclamada: string;
+  cepReclamada: string;
+  emailReclamada: string;
   cidade?: string;
-  reclamadas?: Array<{ nome?: string; cnpj?: string }>;
+  reclamadas?: Reclamada[];
   temMaisReclamadas: string;
   tipoResposabilidadeEmpresas: string;
   dataRegistro: string;
