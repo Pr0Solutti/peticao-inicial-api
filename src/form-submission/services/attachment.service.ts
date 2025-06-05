@@ -562,7 +562,7 @@ condicoes
     : ``
 }
 ${
-  formData.condicoes && formData.condicoes.includes('Gestante')
+  formData?.condicoes?.length && formData.condicoes.includes('Gestante')
     ? `
 <h3>NULIDADE DA DISPENSA – EMPREGADA GRÁVIDA</h3>
 <p>
@@ -573,7 +573,7 @@ A reclamante foi dispensada quando se encontrava grávida, conforme documentaç�
 }
 
 ${
-  formData.condicoes &&
+  formData?.condicoes?.length &&
   formData.condicoes.includes(
     'Dentro do período de estabilidade do acidente/doença? (12 meses após a alta médica)',
   )
@@ -591,7 +591,7 @@ Por ocasião da dispensa, o reclamante encontrava-se enfermo e, portanto, deveri
     : ``
 }
 ${
-  formData.condicoes.includes('Cipeiro')
+  formData?.condicoes?.length && formData.condicoes.includes('Cipeiro')
     ? `
 <h3>NULIDADE DA DISPENSA – CIPEIRO</h3>
 <p>
@@ -601,6 +601,7 @@ O reclamante foi dispensado em período estabilitário, eis que foi eleito, em [
     : ``
 }
 ${
+  formData?.condicoes?.length &&
   formData.condicoes.includes('Dirigente sindical')
     ? `
 <h3>NULIDADE DA DISPENSA – DIRIGENTE SINDICAL</h3>
@@ -623,6 +624,7 @@ O instituto do aviso prévio tem por objetivo assegurar ao trabalhador a oportun
     : ``
 }
 ${
+  formData?.condicoes?.length &&
   formData.condicoes.includes(
     'Dentro do período de estabilidade do acidente/doença? (12 meses após a alta médica)',
   )
@@ -1458,7 +1460,7 @@ Sejam as Reclamadas condenadas no pagamento das seguintes verbas (VENCIDAS E VIN
     : ``
 }
 ${
-  formData.beneficios.includes('Transporte')
+  formData?.beneficios && formData.beneficios.includes('Transporte')
     ? `
     <h3>DAS DIFERENÇAS DO VALE TRANSPORTE</h3>
     <p>
