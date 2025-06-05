@@ -37,7 +37,7 @@ export class AuthController {
         sameSite: 'none',
         path: '/',
         maxAge: 60 * 60 * 24 * 7, // 7 dias,
-        domain: 'peticao-inicial-form-app-production.up.railway.app',
+        domain: '.up.railway.app',
       }),
     );
 
