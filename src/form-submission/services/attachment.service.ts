@@ -7,30 +7,14 @@ import { ptBR } from 'date-fns/locale';
 @Injectable()
 export class AttachmentService {
   async execute(formData: FormData) {
-    const salario = parseFloat(
-      formData?.ultimoSalario?.replace('R$', '').replace(',', '.').trim() ||
-        '0',
-    );
-    const valorPorFora = parseFloat(
-      formData?.valorPorFora?.replace('R$', '').replace(',', '.').trim() || '0',
-    );
-    const salarioSubstituicao = parseFloat(
-      formData?.salarioSubstituido
-        ?.replace('R$', '')
-        .replace(',', '.')
-        .trim() || '0',
-    );
+    const salario = parseFloat(formData?.ultimoSalario || '0');
+    const valorPorFora = parseFloat(formData?.valorPorFora || '0');
+    const salarioSubstituicao = parseFloat(formData?.salarioSubstituido || '0');
     const valorDevidoTransporte = parseFloat(
-      formData?.valorDevidoTransporte
-        ?.replace('R$', '')
-        .replace(',', '.')
-        .trim() || '0',
+      formData?.valorDevidoTransporte || '0',
     );
     const valorRecebidoTransporte = parseFloat(
-      (formData?.valorRecebidoTransporte || '')
-        .replace('R$', '')
-        .replace(',', '.')
-        .trim(),
+      formData?.valorRecebidoTransporte || '0',
     );
     const total = salario + valorPorFora;
     const htmlContent = `
