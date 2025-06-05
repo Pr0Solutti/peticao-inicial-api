@@ -35,7 +35,11 @@ export class FormSubmissionController {
   @Role(UserRolesEnum.ADMIN, UserRolesEnum.LAWYER)
   async export(@Body() createSubmissionDto: FormData, @Res() res: Response) {
     const pdfBuffer = await this.attachmentService.execute(createSubmissionDto);
-
+    if (!pdfBuffer) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
+        message: 'Erro ao gerar o PDF',
+      });
+    }
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': 'attachment; filename=documento.pdf',

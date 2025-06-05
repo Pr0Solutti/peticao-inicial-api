@@ -2778,23 +2778,26 @@ ${
 </body>
 </html>
 `;
+    try {
+      const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium',
+      });
 
-    const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      executablePath: process.env.CHROMIUM_PATH || '/usr/bin/chromium',
-    });
+      const page = await browser.newPage();
+      await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
 
-    const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
+      const pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+      });
 
-    const pdfBuffer = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-    });
+      await browser.close();
 
-    await browser.close();
-
-    return pdfBuffer;
+      return pdfBuffer;
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+    }
   }
 }
