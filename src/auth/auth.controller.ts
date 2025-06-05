@@ -36,7 +36,8 @@ export class AuthController {
         secure: process.env.NODE_ENV === 'production', // true em produção com HTTPS
         sameSite: 'none',
         path: '/',
-        maxAge: 60 * 60 * 24 * 7, // 7 dias
+        maxAge: 60 * 60 * 24 * 7, // 7 dias,
+        domain: 'peticao-inicial-form-app-production.up.railway.app',
       }),
     );
 
