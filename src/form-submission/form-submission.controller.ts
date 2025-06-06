@@ -1,34 +1,56 @@
 import {
   Body,
   Controller,
+  Get,
   HttpStatus,
+  Param,
   Post,
+  Put,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 
-import { CreateFormSubmissionService } from './services/create.service';
-import { CreateFormSubmissionDto } from './dtos/form-submission.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { RoleGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Role } from 'src/auth/decorators/role.decorato';
-import { UserRolesEnum } from 'src/user/types/user.types';
-import { AttachmentService } from './services/attachment.service';
-import { FormData } from './interface/form-data';
 import { Response } from 'express';
+import { Role } from 'src/auth/decorators/role.decorato';
+import { RoleGuard } from 'src/auth/guards/jwt-auth.guard';
+import { UserRolesEnum } from 'src/user/types/user.types';
+import { FormData as FormDataSchema } from './schemas/form-data.schema';
+import { AttachmentService } from './services/attachment.service';
+import { CreateFormSubmissionService } from './services/create.service';
+import { FindByIdFormSubmissionService } from './services/find-by-id.service';
+import { UpdateFormSubmissionService } from './services/update.service';
+import { FormData } from './interface/form-data';
 
 @Controller('form-submissions')
 export class FormSubmissionController {
   constructor(
     private readonly createFormSubmissionService: CreateFormSubmissionService,
     private readonly attachmentService: AttachmentService,
+    private readonly findByIdFormSubmissionService: FindByIdFormSubmissionService,
+    private readonly updateFormSubmissionService: UpdateFormSubmissionService,
   ) {}
 
   @Post()
   @UseGuards(AuthGuard(), RoleGuard)
   @Role(UserRolesEnum.ADMIN, UserRolesEnum.LAWYER)
-  async create(@Body() createSubmissionDto: CreateFormSubmissionDto) {
-    return this.createFormSubmissionService.create(createSubmissionDto);
+  async create(
+    @Body() createSubmissionDto: FormDataSchema,
+    @Req() req: { user: { id: string } },
+  ) {
+    return this.createFormSubmissionService.execute(
+      req.user.id,
+      createSubmissionDto,
+    );
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard(), RoleGuard)
+  @Role(UserRolesEnum.ADMIN, UserRolesEnum.LAWYER)
+  async findById(@Param('id') id: string) {
+    const submission = await this.findByIdFormSubmissionService.execute(id);
+    return submission;
   }
   @Post('/attachment')
   @UseGuards(AuthGuard(), RoleGuard)
@@ -47,5 +69,15 @@ export class FormSubmissionController {
     });
 
     res.status(HttpStatus.OK).send(pdfBuffer);
+  }
+  @Put(':id')
+  @UseGuards(AuthGuard(), RoleGuard)
+  @Role(UserRolesEnum.ADMIN, UserRolesEnum.LAWYER)
+  async update(
+    @Body() updateData: Partial<FormDataSchema>,
+    @Req() req: { user: { id: string } },
+    @Param('id') id: string,
+  ) {
+    return this.updateFormSubmissionService.execute(id, updateData);
   }
 }

@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { FindByIdUserService } from 'src/user/services/find-by-id.service';
+import { FormData } from '../schemas/form-data.schema';
 import {
   FormSubmission,
   FormSubmissionDocument,
 } from '../schemas/form-submission.schema';
-import { CreateFormSubmissionDto } from '../dtos/form-submission.dto';
-import { FindByIdUserService } from 'src/user/services/find-by-id.service';
 
 @Injectable()
 export class CreateFormSubmissionService {
@@ -16,18 +16,17 @@ export class CreateFormSubmissionService {
     private findByIdUserService: FindByIdUserService,
   ) {}
 
-  async create(
-    createSubmissionDto: CreateFormSubmissionDto,
+  async execute(
+    id: string,
+    createSubmissionDto: FormData,
   ): Promise<FormSubmission> {
-    const user = await this.findByIdUserService.execute(
-      createSubmissionDto.userId,
-    );
+    const user = await this.findByIdUserService.execute(id);
     if (!user) {
       throw new BadRequestException('User not found!');
     }
     const created = new this.submissionModel({
-      formData: createSubmissionDto.formData,
-      userId: new Types.ObjectId(createSubmissionDto.userId),
+      formData: createSubmissionDto,
+      userId: new Types.ObjectId(id),
     });
     return created.save();
   }

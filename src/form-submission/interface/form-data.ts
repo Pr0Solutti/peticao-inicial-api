@@ -10,22 +10,22 @@ export interface Reclamada {
   telefone?: string;
 }
 export interface FormData {
-  nomeReclamada: string;
-  nacionalidadeReclamada: string;
-  estadoCivilReclamada: string;
-  rgReclamada: string;
-  cpfReclamada: string;
-  pisReclamada: string;
-  ctpsNumeroReclamada: string;
-  ctpsSerieReclamada: string;
-  nomeMaeReclamada: string;
-  dataNascimentoReclamada: string;
-  enderecoReclamada: string;
-  bairroReclamada: string;
-  cidadeReclamada: string;
-  ufReclamada: string;
-  cepReclamada: string;
-  emailReclamada: string;
+  nomeReclamante: string;
+  nacionalidadeReclamante: string;
+  estadoCivilReclamante: string;
+  rgReclamante: string;
+  cpfReclamante: string;
+  pisReclamante: string;
+  ctpsNumeroReclamante: string;
+  ctpsSerieReclamante: string;
+  nomeMaeReclamante: string;
+  dataNascimentoReclamante: string;
+  enderecoReclamante: string;
+  bairroReclamante: string;
+  cidadeReclamante: string;
+  ufReclamante: string;
+  cepReclamante: string;
+  emailReclamante: string;
   cidade?: string;
   reclamadas?: Reclamada[];
   temMaisReclamadas: string;

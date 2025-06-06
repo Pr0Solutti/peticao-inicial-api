@@ -10,12 +10,42 @@ export class Reclamada {
 
   @Prop()
   cnpj: string;
+  @Prop()
+  endereco: string;
+  @Prop()
+  bairro: string;
+  @Prop()
+  cidade: string;
+  @Prop()
+  uf: string;
+  @Prop()
+  cep: string;
+  @Prop()
+  email: string;
+  @Prop()
+  telefone: string;
 }
 
 const ReclamadaSchema = SchemaFactory.createForClass(Reclamada);
 
 @Schema({ timestamps: false, _id: false })
 export class FormData {
+  @Prop() nomeReclamante: string;
+  @Prop() nacionalidadeReclamante: string;
+  @Prop() estadoCivilReclamante: string;
+  @Prop() rgReclamante: string;
+  @Prop() cpfReclamante: string;
+  @Prop() pisReclamante: string;
+  @Prop() ctpsNumeroReclamante: string;
+  @Prop() ctpsSerieReclamante: string;
+  @Prop() nomeMaeReclamante: string;
+  @Prop() dataNascimentoReclamante: string;
+  @Prop() enderecoReclamante: string;
+  @Prop() bairroReclamante: string;
+  @Prop() cidadeReclamante: string;
+  @Prop() ufReclamante: string;
+  @Prop() cepReclamante: string;
+  @Prop() emailReclamante: string;
   @Prop({ type: [ReclamadaSchema] })
   reclamadas: Reclamada[];
   @Prop() cidade: string;

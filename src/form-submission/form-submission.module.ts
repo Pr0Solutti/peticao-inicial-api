@@ -9,6 +9,8 @@ import { CreateFormSubmissionService } from './services/create.service';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from 'src/user/user.module';
 import { AttachmentService } from './services/attachment.service';
+import { FindByIdFormSubmissionService } from './services/find-by-id.service';
+import { UpdateFormSubmissionService } from './services/update.service';
 
 @Module({
   imports: [
@@ -19,6 +21,11 @@ import { AttachmentService } from './services/attachment.service';
     UsersModule,
   ],
   controllers: [FormSubmissionController],
-  providers: [CreateFormSubmissionService, AttachmentService],
+  providers: [
+    CreateFormSubmissionService,
+    AttachmentService,
+    FindByIdFormSubmissionService,
+    UpdateFormSubmissionService,
+  ],
 })
 export class FormSubmissionModule {}
