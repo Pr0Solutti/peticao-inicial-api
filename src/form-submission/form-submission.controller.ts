@@ -16,12 +16,11 @@ import { Response } from 'express';
 import { Role } from 'src/auth/decorators/role.decorato';
 import { RoleGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UserRolesEnum } from 'src/user/types/user.types';
-import { FormData as FormDataSchema } from './schemas/form-data.schema';
+import { CreateFormSubmissionDto } from './dtos/form-submission.dto';
 import { AttachmentService } from './services/attachment.service';
 import { CreateFormSubmissionService } from './services/create.service';
 import { FindByIdFormSubmissionService } from './services/find-by-id.service';
 import { UpdateFormSubmissionService } from './services/update.service';
-import { FormData } from './interface/form-data';
 
 @Controller('form-submissions')
 export class FormSubmissionController {
@@ -36,7 +35,7 @@ export class FormSubmissionController {
   @UseGuards(AuthGuard(), RoleGuard)
   @Role(UserRolesEnum.ADMIN, UserRolesEnum.LAWYER)
   async create(
-    @Body() createSubmissionDto: FormDataSchema,
+    @Body() createSubmissionDto: CreateFormSubmissionDto,
     @Req() req: { user: { id: string } },
   ) {
     return this.createFormSubmissionService.execute(
@@ -52,11 +51,11 @@ export class FormSubmissionController {
     const submission = await this.findByIdFormSubmissionService.execute(id);
     return submission;
   }
-  @Post('/attachment')
+  @Post('/attachment/:id')
   @UseGuards(AuthGuard(), RoleGuard)
   @Role(UserRolesEnum.ADMIN, UserRolesEnum.LAWYER)
-  async export(@Body() createSubmissionDto: FormData, @Res() res: Response) {
-    const pdfBuffer = await this.attachmentService.execute(createSubmissionDto);
+  async export(@Param('id') id: string, @Res() res: Response) {
+    const pdfBuffer = await this.attachmentService.execute(id);
     if (!pdfBuffer) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({
         message: 'Erro ao gerar o PDF',
@@ -74,7 +73,7 @@ export class FormSubmissionController {
   @UseGuards(AuthGuard(), RoleGuard)
   @Role(UserRolesEnum.ADMIN, UserRolesEnum.LAWYER)
   async update(
-    @Body() updateData: Partial<FormDataSchema>,
+    @Body() updateData: Partial<CreateFormSubmissionDto>,
     @Req() req: { user: { id: string } },
     @Param('id') id: string,
   ) {
