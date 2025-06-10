@@ -37,7 +37,6 @@ export class AuthController {
         sameSite: 'none',
         path: '/',
         maxAge: 60 * 60 * 24 * 7, // 7 dias,
-        domain: '.up.railway.app',
       }),
     );
 
