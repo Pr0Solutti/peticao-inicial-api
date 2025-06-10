@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
-import { FormData, FormDataSchema } from './form-data.schema';
 import { User } from 'src/user/schema/user.schema';
+import { CreateFormSubmissionDto } from '../dtos/form-submission.dto';
 
 export type FormSubmissionDocument = FormSubmission & Document;
 
@@ -10,8 +10,8 @@ export class FormSubmission {
   @Prop({ type: Types.ObjectId, ref: User.name, required: true })
   userId: Types.ObjectId;
 
-  @Prop({ type: FormDataSchema })
-  formData: FormData;
+  @Prop({ type: CreateFormSubmissionDto })
+  formData: CreateFormSubmissionDto;
 }
 
 export const FormSubmissionSchema =

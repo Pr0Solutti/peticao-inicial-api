@@ -7,6 +7,7 @@ import {
   FormSubmission,
   FormSubmissionDocument,
 } from '../schemas/form-submission.schema';
+import { CreateFormSubmissionDto } from '../dtos/form-submission.dto';
 
 @Injectable()
 export class CreateFormSubmissionService {
@@ -18,7 +19,7 @@ export class CreateFormSubmissionService {
 
   async execute(
     id: string,
-    createSubmissionDto: FormData,
+    createSubmissionDto: CreateFormSubmissionDto,
   ): Promise<FormSubmission> {
     const user = await this.findByIdUserService.execute(id);
     if (!user) {

@@ -6,6 +6,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { FormData } from '../schemas/form-data.schema';
+import { CreateFormSubmissionDto } from '../dtos/form-submission.dto';
 
 @Injectable()
 export class UpdateFormSubmissionService {
@@ -16,9 +17,10 @@ export class UpdateFormSubmissionService {
 
   async execute(
     id: string,
-    updateData: Partial<FormData>,
+    updateData: Partial<CreateFormSubmissionDto>,
   ): Promise<FormSubmission> {
     try {
+      console.log(updateData);
       const updatedSubmission = await this.submissionModel.findByIdAndUpdate(
         id,
         { formData: updateData }, // Atualiza apenas o campo formData
