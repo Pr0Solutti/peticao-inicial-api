@@ -10,7 +10,6 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors({
     origin: [
-      'https://peticao-inicial-form-app-production.up.railway.app',
       'https://peticao-inicial-form-app-staging.up.railway.app',
       'http://localhost:3000',
     ],
