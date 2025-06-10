@@ -1366,7 +1366,7 @@ ${
     ? `
   <h3>DA EQUIPARAÇÃO SALARIAL E DA RETIFICAÇÃO DA CTPS </h3>
   <p>
-Como dito, o Reclamante foi admitido pela 1ª Reclamada em ${format(formData?.dataAdmissaoParadigma, 'dd/MM/yyyy', { locale: ptBR })}, tendo sido anotada em sua CTPS a função de ${formData?.cargoParadigma || '[Função]'}.
+Como dito, o Reclamante foi admitido pela 1ª Reclamada em ${formData?.dataAdmissaoParadigma && format(formData?.dataAdmissaoParadigma, 'dd/MM/yyyy', { locale: ptBR })}, tendo sido anotada em sua CTPS a função de ${formData?.cargoParadigma || '[Função]'}.
 </p>
 
 <p>
@@ -2855,6 +2855,7 @@ ${
 </body>
 </html>
 `;
+
     try {
       const browser = await puppeteer.launch({
         headless: true,
