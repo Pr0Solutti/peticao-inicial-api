@@ -2424,22 +2424,17 @@ ${
 
 ${
   formData?.reclamada?.tipoResposabilidadeEmpresas ===
-  'Subsidiária (terceirizado)'
+    'Subsidiária (terceirizado)' ||
+  formData?.reclamada?.tipoResposabilidadeEmpresas ===
+    'Solidária (mesmo grupo econômico)'
     ? `
     <p><strong>SUBSIDIÁRIA</strong> - Seja a segunda Reclamada declarada responsável SUBSIDIÁRIA pelos créditos trabalhistas deferidos ao Reclamante no presente feito, nos termos da súmula 331, IV do TST;</p>
 <p><strong>SUBSIDIARIEDADE</strong> – Sucessivamente, reconhecimento da responsabilidade subsidiária da segunda reclamada pelas verbas decorrentes do contrato de trabalho que vierem a ser deferidas na presente ação.</p>
-    `
-    : ``
-}
-
-${
-  formData?.reclamada?.tipoResposabilidadeEmpresas ===
-  'Solidária (mesmo grupo econômico)'
-    ? `
     <p><strong>SOLIDARIEDADE</strong> - Reconhecimento da responsabilidade solidária das reclamadas pelas verbas decorrentes do contrato de trabalho que vierem a ser deferidas na presente ação.</p>
     `
     : ``
 }
+
 
 ${
   formData?.jornadaHoraExtra?.sobreaviso
@@ -2452,7 +2447,7 @@ ${
 ${
   formData?.salarioBeneficio?.recebiaPremiacao
     ? `
-<p>Reconhecimento da remuneração por <strong>PRODUÇÃO</strong>, composta pelo valor médio de R$ 0,00, com a anotação do respectivo salário na CTPS do Autor, sob pena de multa em favor do Reclamante;</p>
+<p>Reconhecimento da remuneração por <strong>PRODUÇÃO</strong>, composta pelo valor médio de R$ ${formData?.salarioBeneficio?.valorMedioPremiacao || 'VALOR NÃO INFORMADO'}, com a anotação do respectivo salário na CTPS do Autor, sob pena de multa em favor do Reclamante;</p>
   `
     : ``
 }
@@ -2514,7 +2509,8 @@ ${
     : ``
 }
 ${
-  formData?.reclamada?.trabalhouSemRegistroCTPS === 'Não'
+  formData?.reclamada?.trabalhouSemRegistroCTPS === 'Sim' ||
+  formData?.reclamada?.trabalhouSemRegistroCTPS === 'Apenas um período'
     ? `
     <p><strong>COM REGISTRO PARCIAL</strong> - Seja reconhecido o vínculo empregatício com a 1ª Reclamada do período laborado sem 
     registro de ${formData?.reclamada?.dataRegistro} a ${formData?.reclamada?.dataDispensa}, e demais anotações de praxe pela reclamada, tendo em vista, que estão presentes os requisitos da pessoalidade, subordinação, não-eventualidade e onerosidade, conforme dispõem os arts. 2º e 3º da CLT;</p>
@@ -2555,6 +2551,7 @@ ${
   <p>
     Seja declarada a <strong>nulidade do ato cooperado</strong>.
   </p>
+
     ${
       formData?.salarioBeneficio?.desvioFuncao
         ? `
@@ -2564,12 +2561,49 @@ ${
       `
         : ``
     }
-
-<h2>Nulidade do Acordo de Compensação em Labor Insalubre</h2>
+    ${
+      formData?.reclamada?.nulidade
+        ? ` <h2>CONTRATO POR PRAZO DETERMINADO NULO - </h2>
   <p>
-    Seja declarada a <strong>nulidade do acordo de compensação de jornada</strong>, eis que o reclamante se ativava em atividade insalubre.
+    Seja declarada a <strong>nulidade do contrato por prazo determinado</strong> e reconhecimento de que a pactuação se deu por prazo indeterminado.
+  </p>`
+        : ``
+    }
+    ${
+      formData.salarioBeneficio.desvioFuncao
+        ? `
+       <h2>ACÚMULO DE FUNÇÃO - </h2>
+  <p>
+restando a v. Exa. Em consonância com o artigo 460 da CLT, indicar o valor a ser acrescido ao salário da trabalhadora, não inferior a 40% do seu salário atual.
   </p>
-  <p><strong>Seja a parte reclamada condenada ao pagamento das seguintes verbas, que deverão ser apuradas com base na globalidade salarial, nos termos da Súmula 264 do C. TST, a saber:</strong></p>
+      `
+        : ``
+    }
+      ${
+        formData?.reclamada?.nulidade &&
+        formData?.salarioBeneficio?.outroAdicionalDevidos &&
+        formData?.salarioBeneficio?.adicionaisDevidos?.includes('Insalubridade')
+          ? `
+        
+        <h2>Nulidade do Acordo de Compensação em Labor Insalubre - </h2>
+          <p>
+            Seja declarada a <strong>nulidade do acordo de compensação de jornada</strong>, eis que o reclamante se ativava em atividade insalubre.
+          </p>
+        `
+          : ``
+      }
+      ${
+        formData?.reclamada?.nulidade &&
+        formData.reclamada.anotacaoCtpsAvisoPrevio
+          ? `
+          <h2>NULIDADE DE AVISO PRÉVIO - </h2>
+          <p>
+            Seja declarada a <strong>nulidade do aviso prévio</strong> concedido.
+          </p>
+          `
+          : ``
+      }
+        <p><strong>Seja a parte reclamada condenada ao pagamento das seguintes verbas, que deverão ser apuradas com base na globalidade salarial, nos termos da Súmula 264 do C. TST, a saber:</strong></p>
 <table border="1" cellspacing="0" cellpadding="10" width="100%">
   <thead>
     <tr>
