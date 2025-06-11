@@ -26,6 +26,10 @@ export class AttachmentService {
       formData?.condicoesSegurancaTrabalho.valorRecebidoTransporte || '0',
     );
     const total = salario + valorPorFora;
+    const adicionais =
+      formData?.salarioBeneficio?.adicionais
+        ?.map((adc) => adc.toUpperCase())
+        .join('/') || '';
     const htmlContent = `
 <html>
 <head>
@@ -174,23 +178,29 @@ ${
     ? `
     <h2>SEM JUSTA CAUSA – RETIFICAÇÃO DA CTPS</h2>
       <p>
-          A parte reclamante foi admitida em ${formData?.reclamada?.dataRegistro ?? 'DATA NÃO INFORMADA'}, tendo sido registrado na função de ${formData?.salarioBeneficio?.cargoCtps}, porém, ${formData?.salarioBeneficio?.cargoDesempenhado ? `efetivamente, exercia as atribuições de ${formData?.salarioBeneficio?.cargoDesempenhado} desde [00/00/0000],` : ``} sendo que a empregadora não procedeu a alteração tempestiva da CTPS e/ou o remunerou corretamente.
+          A parte reclamante foi admitida em ${formData?.reclamada?.dataRegistro ?? 'DATA NÃO INFORMADA'}, tendo sido registrado na função de ${formData?.salarioBeneficio?.cargoCtps}, porém, ${formData?.salarioBeneficio?.cargoDesempenhado ? `efetivamente, exercia as atribuições de ${formData?.salarioBeneficio?.cargoDesempenhado} desde ${formData?.reclamada?.dataRegistro ?? 'DATA NÃO INFORMADA'},` : ``} sendo que a empregadora não procedeu a alteração tempestiva da CTPS e/ou o remunerou corretamente.
       </p>
     `
     : ``
 }
 ${
-  formData?.reclamada?.reclamadas.length > 1
+  formData?.reclamada?.reclamadas?.length > 0
     ? `
-  <h2>DOIS CONTRATOS DE TRABALHO(NÃO_IDENTIFICADO - FORMULÁRIO)</h2>
-  <p>
-  A parte reclamante foi contratada pela empregadora em dois períodos, sendo estes:
-  1º contrato: de 00/00/0000 a 00/00/0000, exercendo as funções de [inserir] quando recebia o salário de R$ 00,00 mensais, acrescido de [inserir], sendo que o contrato foi encerrado mediante [dispensa sem justa causa/dispensa por justa causa/pedido de demissão].
-  2º contrato: de 00/00/0000 a 00/00/0000, exercendo as funções de [inserir] quando recebia o salário de R$ 00,00 mensais, acrescido de [inserir], sendo que o contrato foi encerrado mediante [dispensa sem justa causa/dispensa por justa causa/pedido de demissão].
-  </p>
+  <h2>${formData?.reclamada?.reclamadas?.length} CONTRATO${formData?.reclamada?.reclamadas?.length > 1 ? 'S' : ''} DE TRABALHO</h2>
+  ${formData.reclamada.reclamadas
+    .map(
+      (_reclamada, index) => `
+        <p>
+A parte reclamante foi contratada pela empregadora em ${index + 1} período${formData?.reclamada?.reclamadas?.length > 1 ? 's' : ''}, sendo este${formData?.reclamada?.reclamadas?.length > 1 ? 's' : ''}:<br>
+${index + 1}º contrato: de ${formData?.reclamada?.dataRegistro} a ${formData?.reclamada?.dataDispensa}, exercendo as funções de ${formData.salarioBeneficio.cargoCtps} quando recebia o salário de R$ ${salario} mensais${adicionais ? `, acrescido de ${adicionais}` : ``}, sendo que o contrato foi encerrado mediante ${formData?.reclamada?.dataDispensa ?? 'DATA NÃO INFORMADA'}.
+        </p>
+      `,
+    )
+    .join('')}
   `
     : ''
 }
+
 
 <h2>Final do tópico - fixo:</h2>
   <p>
