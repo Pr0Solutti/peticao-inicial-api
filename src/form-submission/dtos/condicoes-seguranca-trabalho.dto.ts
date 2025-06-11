@@ -10,6 +10,10 @@ export class CondicoesSegurancaTrabalhoDto {
 
   @IsOptional()
   @IsString()
+  dataAltaAcidente?: string;
+
+  @IsOptional()
+  @IsString()
   descricaoAcidente?: string;
 
   @IsOptional()

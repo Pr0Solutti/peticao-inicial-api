@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import puppeteer from 'puppeteer';
 import { FindByIdFormSubmissionService } from './find-by-id.service';
+import { parseRealParaFloat } from 'src/utils/parse';
 @Injectable()
 export class AttachmentService {
   constructor(
@@ -9,17 +10,19 @@ export class AttachmentService {
   async execute(id: string) {
     const formSubmission = await this.findByIdFormSubmissionService.execute(id);
     const formData = formSubmission.formData;
-    const salario = parseFloat(formData?.salarioBeneficio.ultimoSalario || '0');
-    const valorPorFora = parseFloat(
+    const salario = parseRealParaFloat(
+      formData?.salarioBeneficio.ultimoSalario || '0',
+    );
+    const valorPorFora = parseRealParaFloat(
       formData?.salarioBeneficio.valorPorFora || '0',
     );
-    const salarioSubstituicao = parseFloat(
+    const salarioSubstituicao = parseRealParaFloat(
       formData?.salarioBeneficio.salarioSubstituido || '0',
     );
-    const valorDevidoTransporte = parseFloat(
+    const valorDevidoTransporte = parseRealParaFloat(
       formData?.condicoesSegurancaTrabalho.valorDevidoTransporte || '0',
     );
-    const valorRecebidoTransporte = parseFloat(
+    const valorRecebidoTransporte = parseRealParaFloat(
       formData?.condicoesSegurancaTrabalho.valorRecebidoTransporte || '0',
     );
     const total = salario + valorPorFora;
@@ -77,28 +80,28 @@ Início do tópico - geral${formData?.reclamada.modalidadeDispensa === `Outros` 
 </h3>
 <p>
   
-A parte reclamante foi contratada em <span class="bold">${formData?.reclamada?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>, exercendo por último a função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps && formData?.salarioBeneficio?.cargoCtps.toUpperCase()}</span>, sob a remuneração de <span class="bold">R$ ${formData?.salarioBeneficio.ultimoSalario} </span> por mês, 
-acrescido de <span class="bold">${formData?.salarioBeneficio?.adicionais && formData?.salarioBeneficio?.adicionais.map((adc) => adc.toUpperCase()).join('/')}</span>, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.reclamada?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>. 
+A parte reclamante foi contratada em <span class="bold">${formData?.reclamada?.dataRegistro ?? 'DATA NÃO INFORMADA'}</span>, exercendo por último a função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps && formData?.salarioBeneficio?.cargoCtps.toUpperCase()}</span>, sob a remuneração de <span class="bold">R$ ${salario} </span> por mês, 
+${formData?.salarioBeneficio?.adicionais && formData?.salarioBeneficio?.adicionais?.length > 0 ? `acrescido de <span class="bold">${formData?.salarioBeneficio?.adicionais.map((adc) => adc.toUpperCase()).join('/')}</span>,` : ''} sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.reclamada?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>. 
 </p>
 <p>Em razão do cargo, competia a parte autora as seguintes atribuições ${formData?.salarioBeneficio?.atividadesDesempenhadas}.</p>
 
 <h2>VARIAÇÕES</h2>
 ${
-  formData?.reclamada.trabalhouSemRegistroCTPS
+  formData?.reclamada?.trabalhouSemRegistroCTPS === 'Sim'
     ? `
   <h2>SEM REGISTRO</h2>
 <p>
-A parte reclamante foi admitida em <span class="bold">${formData?.reclamada?.dataAdmissaoSemRegistro ?? 'DATA NÃO INFORMADA'}</span>, sem registro em sua CTPS, exercendo por último a função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps?.toUpperCase()}</span>, sob a remuneração de R$ ${formData?.salarioBeneficio?.ultimoSalario} por mês, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.reclamada?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>.
+A parte reclamante foi admitida em <span class="bold">${formData.reclamada.dataAdmissaoSemRegistro ? formData.reclamada.dataAdmissaoSemRegistro : 'DATA NÃO INFORMADA'}</span>, sem registro em sua CTPS, exercendo por último a função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps?.toUpperCase()}</span>, sob a remuneração de R$ ${salario} por mês, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.reclamada?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>.
 </p>
 `
     : ``
 }
 ${
-  formData?.reclamada?.trabalhouSemRegistroCTPS
+  formData?.reclamada?.trabalhouSemRegistroCTPS === 'Apenas um período'
     ? `
   <h2>COM PERÍODO SEM REGISTRO </h2>
 <p>
-A parte reclamante foi admitida em <span class="bold">${formData?.reclamada?.dataAdmissaoSemRegistro ?? 'DATA NÃO INFORMADA'}</span>, apenas tendo sido registrada na CTPS em <span class="bold">${formData?.reclamada?.dataRegistro ?? 'DATA NÃO INFORMADA'}</span>, exercendo por último a função de ${formData?.salarioBeneficio.cargoCtps?.toUpperCase()}, sob a remuneração de R$ ${formData?.salarioBeneficio?.ultimoSalario} por mês, acrescido de 30% do adicional de periculosidade e produção, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.reclamada?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>.
+A parte reclamante foi admitida em <span class="bold">${formData?.reclamada?.dataAdmissaoSemRegistro ?? 'DATA NÃO INFORMADA'}</span>, apenas tendo sido registrada na CTPS em <span class="bold">${formData?.reclamada?.dataRegistro ?? 'DATA NÃO INFORMADA'}</span>, exercendo por último a função de ${formData?.salarioBeneficio.cargoCtps?.toUpperCase()}, sob a remuneração de R$ ${salario} por mês, acrescido de 30% do adicional de periculosidade e produção, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.reclamada?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>.
 </p>
 `
     : ``
@@ -166,14 +169,19 @@ ${
   </p>`
     : ''
 }
-
-<h2>SEM JUSTA CAUSA – RETIFICAÇÃO DA CTPS</h2>
-  <p>
-      A parte reclamante foi admitida em ${formData?.reclamada?.dataAdmissaoSemRegistro ?? 'DATA NÃO INFORMADA'}, tendo sido registrado na função de ${formData?.salarioBeneficio?.cargoCtps}, porém, efetivamente, exercia as atribuições de ${formData?.salarioBeneficio?.cargoDesempenhado} desde [00/00/0000], sendo que a empregadora não procedeu a alteração tempestiva da CTPS e/ou o remunerou corretamente.
-  </p>
 ${
-  formData?.reclamada.reclamadas.length > 1 &&
-  `
+  formData?.salarioBeneficio?.desvioFuncao
+    ? `
+    <h2>SEM JUSTA CAUSA – RETIFICAÇÃO DA CTPS</h2>
+      <p>
+          A parte reclamante foi admitida em ${formData?.reclamada?.dataRegistro ?? 'DATA NÃO INFORMADA'}, tendo sido registrado na função de ${formData?.salarioBeneficio?.cargoCtps}, porém, ${formData?.salarioBeneficio?.cargoDesempenhado ? `efetivamente, exercia as atribuições de ${formData?.salarioBeneficio?.cargoDesempenhado} desde [00/00/0000],` : ``} sendo que a empregadora não procedeu a alteração tempestiva da CTPS e/ou o remunerou corretamente.
+      </p>
+    `
+    : ``
+}
+${
+  formData?.reclamada?.reclamadas.length > 1
+    ? `
   <h2>DOIS CONTRATOS DE TRABALHO(NÃO_IDENTIFICADO - FORMULÁRIO)</h2>
   <p>
   A parte reclamante foi contratada pela empregadora em dois períodos, sendo estes:
@@ -181,6 +189,7 @@ ${
   2º contrato: de 00/00/0000 a 00/00/0000, exercendo as funções de [inserir] quando recebia o salário de R$ 00,00 mensais, acrescido de [inserir], sendo que o contrato foi encerrado mediante [dispensa sem justa causa/dispensa por justa causa/pedido de demissão].
   </p>
   `
+    : ''
 }
 
 <h2>Final do tópico - fixo:</h2>
@@ -254,11 +263,12 @@ As reclamadas simularam a contratação do reclamante como cooperado. Tendo part
 
 <h2 class="section">DAS NULIDADES</h2>
 ${
-  formData?.reclamada?.trabalhouSemRegistroCTPS &&
+  (formData?.reclamada?.trabalhouSemRegistroCTPS === 'Sim' ||
+    formData?.reclamada?.trabalhouSemRegistroCTPS === 'Apenas um período') &&
   !formData?.reclamada?.seguroDesempregoSemRegistro
     ? `<h3>DA RELAÇÃO DE EMPREGO – RECONHECIMENTO DE VÍNCULO EMPREGATÍCIO - VERBAS SALARIAIS E RESCISÓRIAS</h3>
 <p>
-Conforme narrado ao tópico do contrato de trabalho, a parte autora prestou serviços sem que houvesse a regularização da sua CTPS, trabalhando sem registro no período de <span class="bold">[puxar dados do contrato]</span>.
+Conforme narrado ao tópico do contrato de trabalho, a parte autora prestou serviços sem que houvesse a regularização da sua CTPS, trabalhando sem registro no período de <span class="bold">${formData?.reclamada?.dataAdmissaoSemRegistro}</span>.
 </p>
 <p>
 Ocorre que o reclamante sempre prestou serviços para a empresa, em caráter contínuo e não eventual (havia escala e horário a ser cumpridos), respondia aos superiores (hierarquia), era remunerado (onerosidade) e não podia se fazer substituir por outrém (pessoalidade).
@@ -272,7 +282,7 @@ Logo, pugna pela procedência total da ação e declaração do vínculo emprega
 </p>
 
 <p>
-Ainda, considerando a rescisão contratual firmada em <span class="bold">[desligamento]</span>, sem a correta consideração do período sem registro, deverá a Reclamada ser condenada ao pagamento das diferenças das verbas rescisórias, a saber:
+Ainda, considerando a rescisão contratual firmada em <span class="bold">${formData?.reclamada?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>, sem a correta consideração do período sem registro, deverá a Reclamada ser condenada ao pagamento das diferenças das verbas rescisórias, a saber:
 <span class="bold">saldo de salário, aviso prévio, férias vencidas e/ou proporcionais + 1/3, 13º salários de [inserir anos a receber], FGTS do período laborado, inclusive sobre as verbas rescisórias acima pleiteadas, acrescido da multa fundiária de 40%, e Recolhimentos Previdenciários ao INSS</span>.
 </p>
 
@@ -282,7 +292,7 @@ Protesta pela compensação de valores comprovadamente quitados sob idêntico t�
 
 <h3>PEDIDOS DEPENDENTES</h3>
 <p>
-Seja reconhecido o vínculo com a empregadora no período de <span class="bold">[período do contrato]</span>, com salário mensal de <span class="bold">[salário - dados do contrato]</span>, bem como anotação na CTPS do obreiro na função de <span class="bold">[função - dados do contrato]</span>, sob pena de multa a ser estipulada por este MM. Juiz, a qual é imprescritível.
+Seja reconhecido o vínculo com a empregadora no período de <span class="bold">${formData?.reclamada?.dataRegistro ?? formData?.reclamada?.dataAdmissaoSemRegistro}</span>, com salário mensal de <span class="bold">R$ ${salario}</span>, bem como anotação na CTPS do obreiro na função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps}</span>, sob pena de multa a ser estipulada por este MM. Juiz, a qual é imprescritível.
 </p>
 
 <p>
@@ -593,7 +603,7 @@ ${
     ? `
 <h3>NULIDADE DA DISPENSA – EMPREGADO ACIDENTADO</h3>
 <p>
-O reclamante foi dispensado em período estabilitário, eis que sofreu acidente de trabalho/foi acometido por doença profissional, tendo recebido alta em [xx/xx/xx], motivo pelo qual, diante do disposto no artigo 118 da Lei 8.213/91 (cuja constitucionalidade já foi reconhecida na Súmula 378, do C.TST), deve ser declarada a nulidade do ato de dispensa, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período estabilitário, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
+O reclamante foi dispensado em período estabilitário, eis que sofreu acidente de trabalho/foi acometido por doença profissional, tendo recebido alta em ${formData.condicoesSegurancaTrabalho.dataAltaAcidente}, motivo pelo qual, diante do disposto no artigo 118 da Lei 8.213/91 (cuja constitucionalidade já foi reconhecida na Súmula 378, do C.TST), deve ser declarada a nulidade do ato de dispensa, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período estabilitário, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
 </p>
 
 <h3>NULIDADE DA DISPENSA – DOENTE</h3>
@@ -995,24 +1005,23 @@ Logo, requer o pagamento do respectivo adicional, pelo período acima indicado, 
 </table>
 <h3>DAS DIFERENÇAS SALARIAIS</h3>
 ${
-  formData?.salarioBeneficio?.ultimoSalario &&
-  formData?.salarioBeneficio?.ultimoSalario !== ''
+  formData?.salarioBeneficio?.salarioMenorMinimo
     ? `
   <h3>DA DIFERENÇA SALARIAL PELA FUNÇÃO EXERCIDA E RETIFICAÇÃO DA CTPS</h3>
   <p>
-Conforme acima narrado, o Reclamante fora admitido aos [inserir data] na função de [inserir função]. Entretanto, efetivamente, sempre desempenhou a função de [inserir função], contudo, a Reclamada não procedeu à alteração da função na CTPS obreira, quiçá, concedeu a promoção salarial pertinente ao desempenho da função.
+Conforme acima narrado, o Reclamante fora admitido aos ${formData?.reclamada?.dataAdmissaoSemRegistro ?? formData?.reclamada?.dataRegistro} na função de ${formData?.salarioBeneficio?.cargoCtps}. Entretanto, efetivamente, sempre desempenhou a função de ${formData?.salarioBeneficio?.cargoDesempenhado}, contudo, a Reclamada não procedeu à alteração da função na CTPS obreira, quiçá, concedeu a promoção salarial pertinente ao desempenho da função.
 </p>
 <p>
-Com efeito, conforme se depreende da Cláusula [inserir] da Convenção Coletiva da categoria profissional do obreiro (doc. anexo) o piso salarial do [inserir função] corresponde a R$ [inserir valor] [inserir vigência] e R$ [inserir valor] [inserir vigência], acrescido de 30% de adicional de periculosidade, enquanto o Reclamante recebia apenas R$ [inserir valor], acrescido de 30% de adicional de periculosidade.
+Com efeito, conforme se depreende da Cláusula [inserir] da Convenção Coletiva da categoria profissional do obreiro (doc. anexo) o piso salarial do ${formData?.salarioBeneficio?.cargoCtps} corresponde a R$ [inserir valor] [inserir vigência] e R$ [inserir valor] [inserir vigência], acrescido de 30% de adicional de periculosidade, enquanto o Reclamante recebia apenas R$ ${salario}, acrescido de 30% de adicional de periculosidade.
 </p>
 <p>
-Portanto, nos moldes do art. 460 da CLT, faz jus o reclamante à retificação de sua CTPS, para constar a correta função desempenhada, qual seja, [inserir função] e, o respectivo pagamento das diferenças salariais, oriunda da diferença de salário acima apontadas, bem como seus reflexos nas demais verbas, tais como: horas extras/reflexos, adicional de periculosidade/reflexos, 13º salário, férias acrescidas de 1/3, prêmio e FGTS.
+Portanto, nos moldes do art. 460 da CLT, faz jus o reclamante à retificação de sua CTPS, para constar a correta função desempenhada, qual seja, ${formData?.salarioBeneficio?.cargoCtps} e, o respectivo pagamento das diferenças salariais, oriunda da diferença de salário acima apontadas, bem como seus reflexos nas demais verbas, tais como: horas extras/reflexos, adicional de periculosidade/reflexos, 13º salário, férias acrescidas de 1/3, prêmio e FGTS.
 </p>
 <p>
 DO PEDIDO CONDICIONADO A ESTA TESE:
 </p>
 <p>
-A condenação da Reclamada na obrigação de fazer, com a retificação de sua CTPS, para constar a correta função desempenhada, qual seja, [inserir função] desde o início do contrato e, o respectivo pagamento das diferenças salariais em todo o período contratual, desde a admissão, em razão da real função exercida;
+A condenação da Reclamada na obrigação de fazer, com a retificação de sua CTPS, para constar a correta função desempenhada, qual seja, ${formData?.salarioBeneficio?.cargoCtps} desde o início do contrato e, o respectivo pagamento das diferenças salariais em todo o período contratual, desde a admissão, em razão da real função exercida;
 </p>
 <table border="1" cellspacing="0" cellpadding="10" width="100%">
   <thead>
@@ -1143,13 +1152,13 @@ Assim, requer seja a Reclamada compelida no pagamento dos adicionais devidos a t
 }
 
 ${
-  formData?.salarioBeneficio.pagamentoPorFora
+  formData?.salarioBeneficio?.pagamentoPorFora
     ? `
     <h3>
 DOS REFLEXOS DO SALÁRIO “POR FORA”
     </h3>
   <p>
-O reclamante recebia como salário o valor médio de R$ ${total ? total : '[inserir]'} mensais, que era composto da seguinte forma: salário base de R$ ${salario ? salario : '[inserir]'} (holerite) e cerca de R$ ${valorPorFora ? valorPorFora : '[inserir]'}, “por fora”.
+O reclamante recebia como salário o valor médio de R$ ${total ? total : '[inserir]'} mensais, que era composto da seguinte forma: salário base de R$ ${salario} (holerite) e cerca de R$ ${valorPorFora}, “por fora”.
 </p>
 <p>
 O valor pago “por fora” era variável, uma vez que era calculado de acordo com o tipo de cliente das reclamadas, bem como pela distância a ser percorrida, segundo tabela fornecida pelas Reclamadas.
@@ -1158,10 +1167,10 @@ O valor pago “por fora” era variável, uma vez que era calculado de acordo c
 Embora não constasse do seu holerite e, portanto, não refletisse nas demais verbas trabalhistas, os valores pagos “por fora” eram salário, pois eram pagos habitualmente pela reclamada como contraprestação dos serviços prestados pelo reclamante.
 </p>
 <p>
-Os valores pagos eram depositados [inserir forma de depósito na conta corrente, Pix, dinheiro].
+Os valores pagos eram depositados ${formData?.salarioBeneficio?.formaPagamentoPorFora}.
 </p>
 <p>
-Assim, faz jus o Reclamante ao recebimento da integração do valor de R$ [inserir] ao seu salário para todos os fins, com a consequente condenação da reclamada no pagamento dos seus reflexos nas seguintes verbas: aviso prévio, 13ºs salários, férias (+1/3), FGTS+40% e horas extras/reflexos.
+Assim, faz jus o Reclamante ao recebimento da integração do valor de R$ ${valorPorFora} ao seu salário para todos os fins, com a consequente condenação da reclamada no pagamento dos seus reflexos nas seguintes verbas: aviso prévio, 13ºs salários, férias (+1/3), FGTS+40% e horas extras/reflexos.
 </p>
 <p>
 Integrado ao salário do obreiro o valor pago “por fora”, esse deverá incidir ainda quanto à evolução salarial ocorrida durante o contrato de trabalho, a qual somente foi aplicada em relação ao salário consignado em holerites.
@@ -2031,7 +2040,7 @@ ${
    <h3>DAS DIFERENÇAS DE FGTS</h3>
     
     <p>
-    A reclamada não depositou corretamente o FGTS na conta vinculada do reclamante, nos meses de ${formData?.reclamada?.periodoFgts}, conforme extrato analítico anexo.
+    A reclamada não depositou corretamente o FGTS na conta vinculada do reclamante, nos meses de ${formData?.reclamada?.periodoFgts ?? ``}, conforme extrato analítico anexo.
     </p>
     
     <p>
@@ -2074,7 +2083,14 @@ ${
     <p>
     Na data do seu comparecimento à Justiça do Trabalho, a reclamada deverá pagar ao reclamante a parte incontroversa das verbas rescisórias, sob pena de pagá-las acrescidas de 50%, nos termos do art. 467 da CLT.
     </p>
-
+  `
+    : ``
+}
+${
+  formData.reclamada.guiasFgts === 'Não' &&
+  formData?.reclamada?.anotacaoCtpsAvisoPrevio
+    ? `
+  
      <h3>DA MULTA DO ART. 477 DA CLT</h3>
     
     <p>
@@ -2082,8 +2098,7 @@ ${
     </p>
     <p>
     Ocorre que, fora violado o prazo previsto no § 6º do art. 477 da CLT, para a homologação da rescisão contratual e fornecimento dos documentos hábeis ao saque do FGTS e recebimento do Seguro-Desemprego, conforme constou da ressalva no TRCT (doc. anexo), pelo que, o Reclamante tem direito à multa do § 8º do mesmo artigo.
-    </p>
-  `
+    </p>`
     : ``
 }
 ${
@@ -2492,7 +2507,7 @@ ${
   formData?.reclamada?.trabalhouSemRegistroCTPS === 'Não'
     ? `
     <p><strong>COM REGISTRO PARCIAL</strong> - Seja reconhecido o vínculo empregatício com a 1ª Reclamada do período laborado sem 
-    registro de ${formData?.reclamada?.dataRegistro} a [00/00/0000], e demais anotações de praxe pela reclamada, tendo em vista, que estão presentes os requisitos da pessoalidade, subordinação, não-eventualidade e onerosidade, conforme dispõem os arts. 2º e 3º da CLT;</p>
+    registro de ${formData?.reclamada?.dataRegistro} a ${formData?.reclamada?.dataDispensa}, e demais anotações de praxe pela reclamada, tendo em vista, que estão presentes os requisitos da pessoalidade, subordinação, não-eventualidade e onerosidade, conforme dispõem os arts. 2º e 3º da CLT;</p>
   `
     : ``
 }
