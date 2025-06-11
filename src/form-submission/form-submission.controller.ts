@@ -21,6 +21,7 @@ import { AttachmentService } from './services/attachment.service';
 import { CreateFormSubmissionService } from './services/create.service';
 import { FindByIdFormSubmissionService } from './services/find-by-id.service';
 import { UpdateFormSubmissionService } from './services/update.service';
+import { ListFormSubmissionService } from './services/list.service';
 
 @Controller('form-submissions')
 export class FormSubmissionController {
@@ -29,6 +30,7 @@ export class FormSubmissionController {
     private readonly attachmentService: AttachmentService,
     private readonly findByIdFormSubmissionService: FindByIdFormSubmissionService,
     private readonly updateFormSubmissionService: UpdateFormSubmissionService,
+    private readonly listFormSubmissionService: ListFormSubmissionService,
   ) {}
 
   @Post()
@@ -43,7 +45,12 @@ export class FormSubmissionController {
       createSubmissionDto,
     );
   }
-
+  @Get()
+  @UseGuards(AuthGuard(), RoleGuard)
+  @Role(UserRolesEnum.ADMIN, UserRolesEnum.LAWYER)
+  async listAll(@Req() req: { user: { id: string } }) {
+    return this.listFormSubmissionService.execute(req.user.id);
+  }
   @Get(':id')
   @UseGuards(AuthGuard(), RoleGuard)
   @Role(UserRolesEnum.ADMIN, UserRolesEnum.LAWYER)

@@ -11,6 +11,7 @@ import { UsersModule } from 'src/user/user.module';
 import { AttachmentService } from './services/attachment.service';
 import { FindByIdFormSubmissionService } from './services/find-by-id.service';
 import { UpdateFormSubmissionService } from './services/update.service';
+import { ListFormSubmissionService } from './services/list.service';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UpdateFormSubmissionService } from './services/update.service';
     AttachmentService,
     FindByIdFormSubmissionService,
     UpdateFormSubmissionService,
+    ListFormSubmissionService,
   ],
 })
 export class FormSubmissionModule {}

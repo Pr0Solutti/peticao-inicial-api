@@ -37,7 +37,7 @@ export class AuthController {
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         path: '/',
         maxAge: 60 * 60 * 24 * 7, // 7 dias,
-        domain: '.up.railway.app',
+        // domain: '.up.railway.app',
       }),
     );
 
