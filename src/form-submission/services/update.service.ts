@@ -20,7 +20,6 @@ export class UpdateFormSubmissionService {
     updateData: Partial<CreateFormSubmissionDto>,
   ): Promise<FormSubmission> {
     try {
-      console.log(updateData);
       const updatedSubmission = await this.submissionModel.findByIdAndUpdate(
         id,
         { formData: updateData }, // Atualiza apenas o campo formData

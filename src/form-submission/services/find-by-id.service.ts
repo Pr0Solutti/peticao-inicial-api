@@ -16,8 +16,6 @@ export class FindByIdFormSubmissionService {
   async execute(id: string) {
     // Substitua 'any' pelo tipo correto do retorno
     try {
-      console.log(id);
-
       const result = await this.submissionModel.findById(id);
       if (!result) {
         throw new Error(`Registro com ID ${id} não encontrado.`);
