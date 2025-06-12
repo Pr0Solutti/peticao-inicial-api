@@ -1,10 +1,54 @@
 import {
-  IsArray,
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
+export enum OpcoesDescontos {
+  Ferramentas = 'Ferramentas',
+  Materiais = 'Materiais',
+  Multa = 'Multa',
+  Avaria = 'Avaria/Dano ao veículo',
+  Celular = 'Celular',
+  Outros = 'Outros',
+}
+export enum Adicional {
+  INSALUBRIDADE = 'Insalubridade',
+  PERICULOSIDADE = 'Periculosidade',
+  NOTURNO = 'Noturno',
+  OUTROS = 'Outros',
+}
+export enum OpcoesAdicionais {
+  Insalubridade = 'Insalubridade',
+  Periculosidade = 'Periculosidade',
+  Noturno = 'Noturno',
+  Outros = 'Outros',
+}
+
+export enum Riscos {
+  ProdutosQuimicos = 'Produtos químicos',
+  Poeira = 'Poeira',
+  Fumaca = 'Fumaça',
+  RiscoBiologico = 'Risco biológico',
+  Frio = 'Frio',
+  Calor = 'Calor',
+}
+
+export enum Frequencia {
+  Diariamente = 'Diariamente',
+  Semanalmente = 'Semanalmente',
+  Mensalmente = 'Mensalmente',
+  Semestralmente = 'Semestralmente',
+  Anualmente = 'Anualmente',
+}
+
+export enum FormaPagamento {
+  Dinheiro = 'Dinheiro',
+  Pix = 'Pix',
+  DepositoConta = 'Deposito na conta',
+  Outros = 'Outros',
+}
 
 export class DadosSalarioBeneficioDto {
   @IsBoolean()
@@ -55,9 +99,8 @@ export class DadosSalarioBeneficioDto {
   descontoHolerite?: boolean;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  descontosHoleriteSelecionados?: string[];
+  @IsEnum(OpcoesDescontos, { each: true })
+  descontosHoleriteSelecionados?: OpcoesDescontos[];
 
   @IsOptional()
   @IsString()
@@ -71,16 +114,16 @@ export class DadosSalarioBeneficioDto {
   pagamentoPorFora: boolean;
 
   @IsOptional()
-  @IsString()
-  frequenciaPorFora?: string;
+  @IsEnum(Frequencia)
+  frequenciaPorFora?: Frequencia;
 
   @IsOptional()
   @IsString()
   valorPorFora?: string;
 
   @IsOptional()
-  @IsString()
-  formaPagamentoPorFora?: string;
+  @IsEnum(FormaPagamento)
+  formaPagamentoPorFora?: FormaPagamento;
 
   @IsOptional()
   @IsString()
@@ -91,21 +134,21 @@ export class DadosSalarioBeneficioDto {
   adicionaisRecebidos?: boolean;
 
   @IsOptional()
-  @IsArray()
+  @IsEnum(Adicional)
   @IsString({ each: true })
-  adicionais?: string[];
+  adicionais?: Adicional[];
 
   @IsOptional()
-  @IsString()
-  riscoInsalubridade?: string;
+  @IsEnum(Riscos)
+  riscoInsalubridade?: Riscos;
 
   @IsOptional()
   @IsString()
   descricaoAtividadesInsalubridade?: string;
 
   @IsOptional()
-  @IsString()
-  riscoPericulosidade?: string;
+  @IsEnum(Riscos)
+  riscoPericulosidade?: Riscos;
 
   @IsOptional()
   @IsString()
@@ -115,21 +158,20 @@ export class DadosSalarioBeneficioDto {
   tinhaDireitoSemReceber: boolean;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  adicionaisDevidos?: string[];
+  @IsEnum(OpcoesAdicionais)
+  adicionaisDevidos?: OpcoesAdicionais[];
 
   @IsOptional()
-  @IsString()
-  riscoInsalubridadeDevidos?: string;
+  @IsEnum(Riscos)
+  riscoInsalubridadeDevidos?: Riscos;
 
   @IsOptional()
   @IsString()
   descricaoAtividadesInsalubridadeDevidos?: string;
 
   @IsOptional()
-  @IsString()
-  riscoPericulosidadeDevidos?: string;
+  @IsEnum(Riscos)
+  riscoPericulosidadeDevidos?: Riscos;
 
   @IsOptional()
   @IsString()
@@ -194,8 +236,8 @@ export class DadosSalarioBeneficioDto {
   valorMedioPremiacao?: string;
 
   @IsOptional()
-  @IsString()
-  frequenciaPremiacao?: string;
+  @IsEnum(Frequencia)
+  frequenciaPremiacao?: Frequencia;
 
   @IsOptional()
   @IsString()

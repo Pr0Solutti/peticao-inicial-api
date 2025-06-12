@@ -1,5 +1,18 @@
-import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsOptional, IsString } from 'class-validator';
+export enum Beneficio {
+  ALIMENTACAO = 'Alimentação',
+  TRANSPORTE = 'Transporte',
+  PLR_PPR = 'PLR/PPR',
+  OUTROS = 'Outros',
+  NENHUM = 'Não. (Nenhum desses)',
+}
 
+export enum CondicaoEspecial {
+  GESTANTE = 'Gestante',
+  ESTABILIDADE_ACIDENTE_DOENCA = 'Dentro do período de estabilidade do acidente/doença? (12 meses após a alta médica)',
+  CIPEIRO = 'Cipeiro',
+  DIRIGENTE_SINDICAL = 'Dirigente sindical',
+}
 export class CondicoesSegurancaTrabalhoDto {
   @IsBoolean()
   acidenteTrabalho: boolean;
@@ -104,9 +117,8 @@ export class CondicoesSegurancaTrabalhoDto {
   temProvasAssedio?: boolean;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  condicoes?: string[];
+  @IsEnum(CondicaoEspecial)
+  condicoes?: CondicaoEspecial[];
 
   @IsBoolean()
   trabalhouOutroEstado: boolean;
@@ -124,9 +136,8 @@ export class CondicoesSegurancaTrabalhoDto {
   tempoTransferencia?: string;
 
   @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  beneficios?: string[];
+  @IsEnum(Beneficio)
+  beneficios?: Beneficio[];
 
   @IsOptional()
   @IsString()

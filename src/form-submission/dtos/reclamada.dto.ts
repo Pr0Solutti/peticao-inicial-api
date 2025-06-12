@@ -1,15 +1,71 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsEmail,
+  IsEnum,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   Length,
   ValidateNested,
-  IsNumber,
 } from 'class-validator';
-import { Type } from 'class-transformer';
+
+export enum ResponsabilidadeEmpresa {
+  Subsidiaria = 'Subsidiária (terceirizado)',
+  Solidaria = 'Solidária (mesmo grupo econômico)',
+  Outros = 'Outros',
+}
+
+export enum TrabalhouSemRegistroCTPS {
+  Sim = 'Sim',
+  Nao = 'Não',
+  ApenasUmPeriodo = 'Apenas um período',
+}
+
+export enum GuiasFGTS {
+  Sim = 'Sim',
+  Nao = 'Não',
+  NaoPossuiTempo = 'Não possui tempo necessário',
+  JaEmpregado = 'Não, já está empregado',
+}
+
+export enum ModalidadeDispensa {
+  Trabalhando = 'Trabalhando',
+  RescisaoIndireta = 'Rescisão Indireta',
+  PedidoDemissao = 'Pedido de Demissão',
+  JustaCausa = 'Justa Causa',
+  SemJustaCausa = 'Sem Justa Causa',
+  Outros = 'Outros',
+}
+
+export enum AvisoPrevio {
+  Indenizado = 'Indenizado',
+  Trabalhando = 'Trabalhando',
+  Outros = 'Outros',
+}
+
+export enum OutraFormaAvisoPrevio {
+  NaoCumpriu = 'Não cumpriu',
+  CumpriuEmCasa = 'Cumpriu em casa',
+  Retroativo = 'Retroativo',
+  TrabalhadoSemReducao = 'Trabalhado - Sem alternativa de redução da jornada',
+}
+
+export enum OpcoesDescontos {
+  Ferramentas = 'Ferramentas',
+  Materiais = 'Materiais',
+  Multa = 'Multa',
+  Avaria = 'Avaria/Dano ao veículo',
+  Celular = 'Celular',
+  Outros = 'Outros',
+}
+
+export enum OutrasModalidadesDispensa {
+  RescisaoAntecipada = 'Rescisão Antecipada do Contrato',
+  ContratoCooperativa = 'Contrato por cooperativa',
+}
 
 class ReclamadaDto {
   @IsNotEmpty()
@@ -54,8 +110,8 @@ export class CreateDadosReclamadasDto {
   temMaisReclamadas?: boolean;
 
   @IsOptional()
-  @IsString()
-  tipoResposabilidadeEmpresas?: string;
+  @IsEnum(ResponsabilidadeEmpresa)
+  tipoResposabilidadeEmpresas?: ResponsabilidadeEmpresa;
 
   @IsOptional()
   @IsString()
@@ -70,8 +126,8 @@ export class CreateDadosReclamadasDto {
   quantasReclamadas?: number;
 
   @IsNotEmpty()
-  @IsString()
-  trabalhouSemRegistroCTPS: string;
+  @IsEnum(TrabalhouSemRegistroCTPS)
+  trabalhouSemRegistroCTPS: TrabalhouSemRegistroCTPS;
 
   @IsOptional()
   @IsString()
@@ -82,8 +138,8 @@ export class CreateDadosReclamadasDto {
   seguroDesempregoSemRegistro?: boolean;
 
   @IsNotEmpty()
-  @IsString()
-  modalidadeDispensa: string;
+  @IsEnum(ModalidadeDispensa)
+  modalidadeDispensa: ModalidadeDispensa;
 
   @IsOptional()
   @IsString()
@@ -114,12 +170,12 @@ export class CreateDadosReclamadasDto {
   dataDispensa?: string;
 
   @IsOptional()
-  @IsString()
-  avisoPrevio?: string;
+  @IsEnum(AvisoPrevio)
+  avisoPrevio?: AvisoPrevio;
 
   @IsOptional()
-  @IsString()
-  outraFormaAvisoPrevio?: string;
+  @IsEnum(OutraFormaAvisoPrevio)
+  outraFormaAvisoPrevio?: OutraFormaAvisoPrevio;
 
   @IsOptional()
   @IsBoolean()
@@ -130,8 +186,8 @@ export class CreateDadosReclamadasDto {
   dataDispensaAvisoPrevio?: string;
 
   @IsOptional()
-  @IsString()
-  outroTipoDispensa?: string;
+  @IsEnum(OutrasModalidadesDispensa)
+  outroTipoDispensa?: OutrasModalidadesDispensa;
 
   @IsOptional()
   @IsString()
@@ -151,8 +207,8 @@ export class CreateDadosReclamadasDto {
   valorTotalDescontos?: string;
 
   @IsOptional()
-  @IsString()
-  guiasFgts?: string;
+  @IsEnum(GuiasFGTS)
+  guiasFgts?: GuiasFGTS;
 
   @IsOptional()
   @IsBoolean()
