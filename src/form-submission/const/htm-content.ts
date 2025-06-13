@@ -78,7 +78,7 @@ export const htmlContentDoc = (formData: CreateFormSubmissionDto) => {
       (rec, index) => `
         ${index !== 0 ? `${index + 1}ª` : `a ser processada pelo RITO ORDINÁRIO, em face de`}  
         <span class="bold">${rec.nome}</span>, pessoa jurídica de direito privado e/ou público, devidamente inscrita no CNPJ sob o nº ${rec.cnpj}, estabelecida na ${rec.rua}, ${rec.bairro} - ${rec.cidade}/${rec.uf} (CEP ${rec.cep}), com endereço eletrônico através do e-mail: ${rec.email} e telefone ${rec.telefone}, 
-        ${index !== 0 ? `e subsidiariamente:` : formData?.reclamada.reclamadas && formData?.reclamada.reclamadas.length === index + 1 ? `pelos motivos de fato e de direito adiante expendidos.` : ``}
+        ${index === 0 && formData?.reclamada.reclamadas.length > 1 ? `e subsidiariamente:` : formData?.reclamada.reclamadas && formData?.reclamada.reclamadas.length === index + 1 ? `pelos motivos de fato e de direito adiante expendidos.` : ``}
       `,
     )
     .join('<br>')}
@@ -148,7 +148,10 @@ O contrato de trabalho se encerrou mediante dispensa, sem justa causa, em ${form
 }
 <p>
 ${
-  formData?.salarioBeneficio?.avisoPrevio === AvisoPrevio.Trabalhando
+  formData?.salarioBeneficio?.modalidadeDispensa ===
+    ModalidadeDispensa.Trabalhando ||
+  formData?.salarioBeneficio?.modalidadeDispensa ===
+    ModalidadeDispensa.RescisaoIndireta
     ? `<h2>TRABALHANDO (sem aviso prévio e multa 40% do FGTS)</h2>
 Ressalte-se que o contrato de trabalho permanece vigente, razão pela qual pugna-se pelo recebimento de todas as verbas pleiteadas e seus reflexos, sejam elas vencidas e/ou vincendas.
 `
@@ -171,7 +174,9 @@ ${
 ${
   formData?.salarioBeneficio?.modalidadeDispensa ===
     ModalidadeDispensa.PedidoDemissao &&
-  formData?.salarioBeneficio?.avisoPrevio === AvisoPrevio.Trabalhando
+  formData?.salarioBeneficio?.avisoPrevio === AvisoPrevio.Outros &&
+  formData?.salarioBeneficio?.outraFormaAvisoPrevio ===
+    OutraFormaAvisoPrevio.CumpriuEmCasa
     ? `
   <h2>PEDIDO DE DEMISSÃO – AVISO PRÉVIO CUMPRIDO</h2>
   <p>
@@ -185,14 +190,16 @@ ${
     ? `
   <h2>JUSTA CAUSA</h2>
   <p>
-    O contrato de trabalho foi extinto mediante demissão por justa causa em ${formData?.salarioBeneficio?.dataDispensa || ''}, sob a alegação de <span class="bold">${formData?.salarioBeneficio?.motivoModalidadeDispensa || 'FALTA ATRIBUTO_MOTIVO_JUSTA_CAUSA'}</span>.
+    O contrato de trabalho foi extinto mediante demissão por justa causa em ${formData?.salarioBeneficio?.dataDispensa || ''}, sob a alegação de <span class="bold">${formData?.salarioBeneficio?.modalidadeDispensa}</span>.
     ${formData?.salarioBeneficio?.advertenciaSuspensao ? 'Importante destacar que o reclamante recebeu advertências prévias.' : ''}
   </p>`
     : ''
 }
 ${
-  formData?.salarioBeneficio?.desvioFuncao
+  formData?.salarioBeneficio?.modalidadeDispensa ===
+    ModalidadeDispensa.SemJustaCausa && formData?.salarioBeneficio?.desvioFuncao
     ? `
+    <h2>SEM JUSTA CAUSA – RETIFICAÇÃO CTPS</h2>
       <p>
           A parte reclamante foi admitida em ${formData?.salarioBeneficio?.dataAdmissao ?? 'DATA NÃO INFORMADA'}, tendo sido registrado na função de ${formData?.salarioBeneficio?.cargoCtps}, porém, ${formData?.salarioBeneficio?.cargoDesempenhado ? `efetivamente, exercia as atribuições de ${formData?.salarioBeneficio?.cargoDesempenhado} desde ${formData?.salarioBeneficio?.dataAdmissao ?? 'DATA NÃO INFORMADA'},` : ``} sendo que a empregadora não procedeu a alteração tempestiva da CTPS e/ou o remunerou corretamente.
       </p>
@@ -206,7 +213,7 @@ ${
   TrabalhouSemRegistroCTPS.Sim
     ? `
   <p>
-  <span class="bold">contrato com registro </span>: de ${formData?.salarioBeneficio?.dataAdmissao} a ${formData?.salarioBeneficio?.dataDispensa}, exercendo as funções de ${formData.salarioBeneficio.cargoCtps} quando recebia o salário de R$ ${formatarParaReal(salario)} mensais${adicionais ? `, acrescido de ${adicionais}` : ``}, sendo que o contrato foi encerrado mediante ${formData?.salarioBeneficio?.dataDispensa ?? 'DATA NÃO INFORMADA'}.
+  <span class="bold">contrato com registro</span>: de ${formData?.salarioBeneficio?.dataAdmissao} a ${formData?.salarioBeneficio?.dataDispensa}, exercendo as funções de ${formData.salarioBeneficio.cargoCtps} quando recebia o salário de R$ ${formatarParaReal(salario)} mensais${adicionais ? `, acrescido de ${adicionais}` : ``}, sendo que o contrato foi encerrado mediante ${formData?.salarioBeneficio?.dataDispensa ?? 'DATA NÃO INFORMADA'}.
  </p>
   
   `
@@ -219,7 +226,7 @@ ${
     TrabalhouSemRegistroCTPS.ApenasUmPeriodo
     ? `
   <p>
-  <span class="bold">contrato sem registro </span>: de ${formData?.salarioBeneficio?.dataAdmissaoSemRegistro} a ${formData?.salarioBeneficio?.dataDispensaSemRegistro}, exercendo as funções de ${formData.salarioBeneficio.cargoCtps} quando recebia o salário de R$ ${formatarParaReal(salario)} mensais${adicionais ? `, acrescido de ${adicionais}` : ``}.
+  <span class="bold">contrato sem registro</span>: de ${formData?.salarioBeneficio?.dataAdmissaoSemRegistro} a ${formData?.salarioBeneficio?.dataDispensaSemRegistro}, exercendo as funções de ${formData.salarioBeneficio.cargoCtps} quando recebia o salário de R$ ${formatarParaReal(salario)} mensais${adicionais ? `, acrescido de ${adicionais}` : ``}.
  </p>
   
   `
