@@ -2,7 +2,6 @@ import { parseRealParaFloat } from 'src/utils/parse';
 import { CreateFormSubmissionDto } from '../dtos/form-submission.dto';
 import { ResponsabilidadeEmpresa } from '../dtos/reclamada.dto';
 import {
-  Adicional,
   OpcoesAdicionais,
   AvisoPrevio,
   GuiasFGTS,
@@ -31,8 +30,20 @@ export const htmlContentDoc = (formData: CreateFormSubmissionDto) => {
   const valorDevidoTransporte = parseRealParaFloat(
     formData?.condicoesSegurancaTrabalho.valorDevidoTransporte || '0',
   );
+  const valorCombustivelGastoReclamante = parseRealParaFloat(
+    formData?.condicoesSegurancaTrabalho.valorGastoReclamante || '0',
+  );
+  const valorCombustivelEmpresa = parseRealParaFloat(
+    formData?.condicoesSegurancaTrabalho.valorCombustivelEmpresa || '0',
+  );
   const valorRecebidoTransporte = parseRealParaFloat(
     formData?.condicoesSegurancaTrabalho.valorRecebidoTransporte || '0',
+  );
+  const valorTotalDescontosHolerite = parseRealParaFloat(
+    formData?.salarioBeneficio.valorTotalDescontosHolerite || '0',
+  );
+  const valorTotalDescontos = parseRealParaFloat(
+    formData?.salarioBeneficio.valorTotalDescontos || '0',
   );
   const total = salario + valorPorFora;
   const adicionais =
@@ -306,10 +317,8 @@ As reclamadas simularam a contratação do reclamante como cooperado. Tendo part
 
 <h2 class="section">DAS NULIDADES</h2>
 ${
-  (formData?.salarioBeneficio?.trabalhouSemRegistroCTPS ===
+  formData?.salarioBeneficio?.trabalhouSemRegistroCTPS ===
     TrabalhouSemRegistroCTPS.Sim ||
-    formData?.salarioBeneficio?.trabalhouSemRegistroCTPS ===
-      TrabalhouSemRegistroCTPS.ApenasUmPeriodo) &&
   !formData?.salarioBeneficio?.seguroDesempregoSemRegistro
     ? `<h3>DA RELAÇÃO DE EMPREGO – RECONHECIMENTO DE VÍNCULO EMPREGATÍCIO - VERBAS SALARIAIS E RESCISÓRIAS</h3>
 <p>
@@ -327,7 +336,7 @@ Logo, pugna pela procedência total da ação e declaração do vínculo emprega
 </p>
 
 <p>
-Ainda, considerando a rescisão contratual firmada em <span class="bold">${formData?.salarioBeneficio?.dataAdmissaoSemRegistro ?? 'DATA NÃO INFORMADA'}</span>, sem a correta consideração do período sem registro, deverá a Reclamada ser condenada ao pagamento das diferenças das verbas rescisórias, a saber:
+Ainda, considerando a rescisão contratual firmada em <span class="bold">${formData?.salarioBeneficio?.dataDispensaSemRegistro ?? 'DATA NÃO INFORMADA'}</span>, sem a correta consideração do período sem registro, deverá a Reclamada ser condenada ao pagamento das diferenças das verbas rescisórias, a saber:
 <span class="bold">saldo de salário, aviso prévio, férias vencidas e/ou proporcionais + 1/3, 13º salários de [inserir anos a receber], FGTS do período laborado, inclusive sobre as verbas rescisórias acima pleiteadas, acrescido da multa fundiária de 40%, e Recolhimentos Previdenciários ao INSS</span>.
 </p>
 
@@ -497,7 +506,7 @@ Outrossim, não houve nenhum tipo de prestação de assistência jurídica ao re
 </p>
 
 <p>
-Corroborando com tais fatos, cita-se o depoimento do representante do sindicato, em caso análogo, contra a mesma empresa (Processo nº 011059-44.2019.5.15.0044 – AUTOR: VALTER CASTRO DE ANDRADE – RÉU: TEL TELECOMUNICAÇÕES LTDA.), colhido como testemunha da reclamada, Sr. Ismar José Antônio Júnior, REPRESENTANTE SINDICAL:
+Corroborando com tais fatos, cita-se o depoimento do representante do sindicato, em caso análogo, contra a mesma empresa (Processo nº 011059-44.2019.5.15.0044 – AUTOR: ${formData?.reclamante?.nome.toUpperCase()} – RÉU: ${formData?.reclamada?.reclamadas[0]?.nome.toUpperCase()}.), colhido como testemunha da reclamada, Sr. Ismar José Antônio Júnior, REPRESENTANTE SINDICAL:
 </p>
 
 <blockquote>
@@ -554,7 +563,7 @@ Seja, assim, declarada <span class="bold">NULA</span> a quitação do contrato d
 
 ${
   formData?.salarioBeneficio?.modalidadeDispensa ===
-    ModalidadeDispensa.Outros && formData?.salarioBeneficio?.teveAnotacaoCtps
+    ModalidadeDispensa.Outros && !formData?.salarioBeneficio?.teveAnotacaoCtps
     ? `<h3>NULIDADE DE CONTRATO TEMPORÁRIO / NULIDADE DO CONTRATO POR PRAZO DETERMINADO</h3>
 
 <p>
@@ -650,14 +659,18 @@ ${
     CondicaoEspecial.ESTABILIDADE_ACIDENTE_DOENCA,
   )
     ? `
-<h3>NULIDADE DA DISPENSA – EMPREGADO ACIDENTADO</h3>
+<h2>NULIDADE DA DISPENSA – EMPREGADO ACIDENTADO</h2>
+<h2>EMPREGADO QUE RECEBEU AUXÍLIO-DOENÇA ACIDENTÁRIO</h2>
 <p>
-O reclamante foi dispensado em período estabilitário, eis que sofreu acidente de trabalho/foi acometido por doença profissional, tendo recebido alta em ${formData.condicoesSegurancaTrabalho.dataAltaAcidente}, motivo pelo qual, diante do disposto no artigo 118 da Lei 8.213/91 (cuja constitucionalidade já foi reconhecida na Súmula 378, do C.TST), deve ser declarada a nulidade do ato de dispensa, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período estabilitário, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
+O reclamante foi dispensado em período estabilitário, eis que sofreu acidente de trabalho/foi acometido por doença profissional, tendo recebido alta em ${formData.condicoesSegurancaTrabalho.dataAltaAcidente}, motivo pelo qual, diante do disposto no artigo 118 da Lei 8.213/91 (cuja constitucionalidade 
+já foi reconhecida na Súmula 378, do C.TST), deve ser declarada a nulidade do ato de dispensa, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa 
+Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período estabilitário, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
 </p>
 
 <h3>NULIDADE DA DISPENSA – DOENTE</h3>
 <p>
-Por ocasião da dispensa, o reclamante encontrava-se enfermo e, portanto, deveria estar em gozo de auxílio doença com seu contrato de trabalho suspenso. Desta forma, deve ser declarada a nulidade do ato de dispensa, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período entre o desligamento e a recuperação da capacidade laborativa, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
+Por ocasião da dispensa, o reclamante encontrava-se enfermo e, portanto, deveria estar em gozo de auxílio doença com seu contrato de trabalho suspenso. Desta forma, deve ser declarada a nulidade do ato de dispensa, determinando-se a reintegração do obreiro, com pagamento dos salários e todas as demais 
+verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e depósito de FGTS do período de afastamento ou, caso Vossa Excelência entenda desaconselhável a reintegração, seja deferido o pagamento de indenização do período entre o desligamento e a recuperação da capacidade laborativa, consistente em salários e todas as demais verbas salariais habitualmente pagas, 13º salário, férias + 1/3 e FGTS + 40%.
 </p>
   `
     : ``
@@ -718,7 +731,7 @@ Nulo o aviso prévio concedido, faz jus a indenização de novo período de avis
 }
 ${
   formData?.salarioBeneficio?.modalidadeDispensa ===
-    ModalidadeDispensa.PedidoDemissao && formData?.salarioBeneficio?.nulidade
+    ModalidadeDispensa.JustaCausa && formData?.salarioBeneficio?.nulidade
     ? `
 <h3>DA NULIDADE DA JUSTA CAUSA APLICADA</h3>
 <p>
@@ -745,9 +758,9 @@ Requer ainda, a entrega das Guias TRCT com o código 01 para percepção do FGTS
 <p>
 Deverão ser deduzidos os valores pagos sob mesmo título.
 </p>
-<h3>
+<span style="font-weight: bold;">
 PEDIDOS CONDICIONADOS A ESSA FUNDAMENTAÇÃO: 
-</h3>
+</span>
 <p>
 A NULIDADE DA JUSTA CAUSA IMPOSTA, convolando-se a rescisão contratual na modalidade DEMISSÃO IMOTIVADA, com  consequente condenação da Reclamada ao pagamento das verbas rescisórias e direitos trabalhistas inerentes da dispensa sem justa causa, tais quais: saldo de salário, Aviso Prévio indenizado, 13º salário proporcional, férias proporcionais + 1/3, FGTS sobre as verbas rescisórias + 40%, Multa de 40% do FGTS.
 </p>
@@ -956,12 +969,14 @@ A entrega das Guias/TRCT com o código 01 para percepção do FGTS depositado e 
     : ``
 }
 ${
-  formData?.salarioBeneficio?.adicionais &&
-  formData?.salarioBeneficio?.adicionais.length > 0
+  formData?.salarioBeneficio?.adicionaisDevidos &&
+  formData?.salarioBeneficio?.adicionaisDevidos.length > 0
     ? `
-<h3>Dos acréscimos na remuneração ${formData?.salarioBeneficio?.adicionais.map((adicional) => adicional).join('/')}</h3>
+<h3>Dos acréscimos na remuneração ${formData?.salarioBeneficio?.adicionaisDevidos.map((adicional) => adicional).join('/')}</h3>
   ${
-    formData?.salarioBeneficio?.adicionais.includes(Adicional.INSALUBRIDADE)
+    formData?.salarioBeneficio?.adicionaisDevidos.includes(
+      OpcoesAdicionais.INSALUBRIDADE,
+    )
       ? `
     <h3>DO ADICIONAL DE INSALUBRIDADE</h3>
     <p>
@@ -989,7 +1004,10 @@ ${
       : ``
   }
 ${
-  formData?.salarioBeneficio?.adicionais.includes(Adicional.PERICULOSIDADE)
+  formData?.salarioBeneficio?.adicionaisDevidos &&
+  formData?.salarioBeneficio?.adicionaisDevidos.includes(
+    OpcoesAdicionais.PERICULOSIDADE,
+  )
     ? `
     <h3>DO ADICIONAL DE PERICULOSIDADE</h3>
     <p>
@@ -1059,7 +1077,7 @@ Logo, requer o pagamento do respectivo adicional, pelo período acima indicado, 
 </table>
 <h3>DAS DIFERENÇAS SALARIAIS</h3>
 ${
-  formData?.salarioBeneficio?.salarioMenorMinimo
+  formData?.salarioBeneficio?.salarioMenorPiso
     ? `
   <h3>DA DIFERENÇA SALARIAL PELA FUNÇÃO EXERCIDA E RETIFICAÇÃO DA CTPS</h3>
   <p>
@@ -1295,13 +1313,13 @@ ${
     ? `
   <h3>DA DIFERENÇA SALARIAL – SALÁRIO-MÍNIMO, GARANTIA CONSTITUCIONAL</h3>
   <p>
-Conforme já dito, o Reclamante, da admissão até ${formData?.salarioBeneficio?.dataAdmissaoSemRegistro || '[inserir data]'}, recebia como salário a quantia de R$ ${salario ? salario : '[inserir valor]'} por mês, valor este inferior ao salário-mínimo Nacional no ano de [inserir ano] que corresponde a R$ [inserir valor] por mês.
+Conforme já dito, o Reclamante, da admissão até ${formData?.salarioBeneficio?.dataAdmissao || '[inserir data]'}, recebia como salário a quantia de R$ ${salario ? salario : '[inserir valor]'} por mês, valor este inferior ao salário-mínimo Nacional no ano de ${formData?.salarioBeneficio?.dataAdmissao?.split('/')[2]} que corresponde a R$ [inserir valor] por mês.
 </p>
 <p>
 Verifica-se que a reclamada não respeitou o previsto na Constituição Federal de 1988 em seu artigo 7º, inciso VI, que garante aos trabalhadores o direito à percepção de um salário-mínimo fixado em lei, para que seja possível o atendimento das necessidades vitais básicas.
 </p>
 <p>
-Portanto, faz jus o Reclamante ao pagamento das diferenças salariais no importe médio de R$ ${salario ? salario : '[inserir valor]'} /mês, oriunda da diferença de salário acima apontada, bem como seus reflexos nas demais verbas, tais como: Aviso prévio, horas extras/reflexos, 13º salário, férias acrescidas de 1/3, FGTS + 40%, horas extras/reflexos.
+Portanto, faz jus o Reclamante ao pagamento das diferenças salariais no importe médio de R$ ${salario ? formatarParaReal(salario) : '[inserir valor]'} /mês, oriunda da diferença de salário acima apontada, bem como seus reflexos nas demais verbas, tais como: Aviso prévio, horas extras/reflexos, 13º salário, férias acrescidas de 1/3, FGTS + 40%, horas extras/reflexos.
 </p>
 
 <h3>DO PEDIDO CONDICIONADO A ESTA TESE:</h3>
@@ -1369,13 +1387,13 @@ ${
 Embora tenha sido anotada na CTPS obreira a função de ${formData?.salarioBeneficio?.cargoCtps || '[inserir]'} durante todo o período contratual, efetivamente essa não foi a única função desempenhada pelo Reclamante.
 </p>
 <p>
-Isso porque, durante o período contratual, no mês de ${formData?.salarioBeneficio?.dataAdmissaoSubstituido || '[inserir]'} de ${formData?.salarioBeneficio?.dataAdmissaoSubstituido || '[inserir]'}, o Reclamante exerceu a função de ${formData?.salarioBeneficio?.cargoSubstituido || '[inserir]'} em substituição ao Sr(a). ${formData?.salarioBeneficio?.nomeSubstituido || '[inserir nome do substituído]'}, durante o gozo de férias deste. O substituído recebia um salário de R$ ${salarioSubstituicao ? formatarParaReal(salarioSubstituicao) : '[inserir]'}/mês.
+Isso porque, durante o período contratual, no mês de ${formData?.salarioBeneficio?.dataAdmissaoSubstituido?.split('/')[1] || '[inserir]'} de ${formData?.salarioBeneficio?.dataAdmissaoSubstituido?.split('/')[2] || '[inserir]'}, o Reclamante exerceu a função de ${formData?.salarioBeneficio?.cargoSubstituido || '[inserir]'} em substituição ao Sr(a). ${formData?.salarioBeneficio?.nomeSubstituido || '[inserir nome do substituído]'}, durante o gozo de férias deste. O substituído recebia um salário de R$ ${salarioSubstituicao ? formatarParaReal(salarioSubstituicao) : '[inserir]'}/mês.
 </p>
 <p>
-Nessas ocasiões, o Reclamante assumia integralmente as funções de [inserir], competindo-lhe [descrever atividades].
+Nessas ocasiões, o Reclamante assumia integralmente as funções de ${formData?.salarioBeneficio?.cargoSubstituido || '[inserir]'} em substituição ao Sr(a). ${formData?.salarioBeneficio?.nomeSubstituido || '[inserir nome do substituído]'}, competindo-lhe [descrever atividades].
 </p>
 <p>
-Assim, ao cobrir as férias do referido colega, o Reclamante teria o direito ao recebimento do salário de seu substituído, enquanto durar a substituição, conforme entendimento preconizado pela súmula 159 do Tribunal Superior do Trabalho.
+Assim, ao cobrir a(s) ${formData?.salarioBeneficio?.motivoSubstituicao} do referido colega, o Reclamante teria o direito ao recebimento do salário de seu substituído, enquanto durar a substituição, conforme entendimento preconizado pela súmula 159 do Tribunal Superior do Trabalho.
 </p>
 <p>
 Contudo, o Reclamante nunca recebeu qualquer valor a título de pagamento do salário substituição a que faria jus.
@@ -1446,15 +1464,16 @@ ${
     ? `
   <h3>DA EQUIPARAÇÃO SALARIAL E DA RETIFICAÇÃO DA CTPS </h3>
   <p>
-Como dito, o Reclamante foi admitido pela 1ª Reclamada em ${formData?.salarioBeneficio?.dataAdmissaoParadigma}, tendo sido anotada em sua CTPS a função de ${formData?.salarioBeneficio?.cargoParadigma || '[Função]'}.
+Como dito, o Reclamante foi admitido pela 1ª Reclamada em ${formData?.salarioBeneficio?.dataAdmissao}, tendo sido anotada em sua CTPS a função de ${formData?.salarioBeneficio?.cargoCtps || '[Função]'}.
 </p>
 
 <p>
-Entretanto, efetivamente, sempre exerceu a função de [Função]. Enquanto [Função], o Reclamante desempenhava a mesma função do Sr. ${formData?.salarioBeneficio?.nomeParadigma || '[nome do paradigma]'} (paradigma ora indicado), que percebia salário mensal de ${formData?.salarioBeneficio?.salarioParadigma}, enquanto o obreiro recebia apenas R$ ${formatarParaReal(salario)} mensais.
+Entretanto, efetivamente, sempre exerceu a função de ${formData?.salarioBeneficio?.cargoCtps || '[Função]'}.<br>
+Enquanto ${formData?.salarioBeneficio?.cargoParadigma || '[nome do paradigma]'}, o Reclamante desempenhava a mesma função do Sr. ${formData?.salarioBeneficio?.nomeParadigma || '[nome do paradigma]'} (paradigma ora indicado), que percebia salário mensal de R$ ${formatarParaReal(salarioSubstituicao)}, enquanto o obreiro recebia apenas R$ ${formatarParaReal(salario)} mensais.
 </p>
 
 <p>
-Cumpre registrar que, como [Função], ambos realizavam [descrever atividades].
+Cumpre registrar que, como ${formData?.salarioBeneficio?.cargoCtps}, ambos realizavam ${formData?.salarioBeneficio?.atividadesDesempenhadas || '[Atividades]'}.
 </p>
 
 <p>
@@ -1470,10 +1489,10 @@ Ademais, deverá ser a Reclamada compelida a apresentar, em sede de audiência i
 </p>
 
 <p>
-Assim, faz jus o Reclamante à retificação de sua CTPS, para constar a correta função desempenhada desde admissão, qual seja, [Função].
+Assim, faz jus o Reclamante à retificação de sua CTPS, para constar a correta função desempenhada desde admissão, qual seja, ${formData?.salarioBeneficio?.cargoCtps || '[Função]'}.
 </p>
 
-<h3>DO PEDIDO CONDICIONADO A ESTA TESE:</h3>
+<span style="font-weight: bold;">DO PEDIDO CONDICIONADO A ESTA TESE:</span>
 
 <p>
 Seja declarada a identidade de função do Reclamante e o paradigma, no período indicado e, por conseguinte, retificada a sua CTPS, conforme fundamentação acima;
@@ -1565,7 +1584,7 @@ Ocorre que, a reclamada fornecia à obreira apenas o importe de R$ ${formatarPar
 Assim, deve a reclamada ser impelida a indenizar ao reclamante nos valores correspondentes à diferença de vale transporte durante todo o pacto laboral, no valor mensal de R$ ${formatarParaReal(valorDevidoTransporte - valorRecebidoTransporte)}.
 </p>
 
-<h3>DO PEDIDO CONDICIONADO A ESTA TESE:</h3>
+<span style="font-weight: bold;">DO PEDIDO CONDICIONADO A ESTA TESE:</span>
 
 <table border="1" cellspacing="0" cellpadding="10" width="100%">
   <thead>
@@ -1623,7 +1642,7 @@ Portanto, podemos concluir que o Reclamante faz jus ao recebimento das horas ext
 Deverão ser deduzidos os valores já pagos sob o mesmo título.
 </p>
 
-<h3>DO PEDIDO CONDICIONADO A ESTA TESE:</h3>
+<span style="font-weight: bold;">DO PEDIDO CONDICIONADO A ESTA TESE:</span>
 
 <p>
 Seja reconhecida a nulidade do controle de jornada do obreiro, visto não condizer com a realidade vivenciada;
@@ -1703,7 +1722,7 @@ ${
     ? `
   <h3>DA JORNADA DE TRABALHO - DAS HORAS EXTRAS</h3>
   <p>
-Durante o contrato de trabalho a parte autora trabalhou em escala 12x36, em média, das ${formData?.jornadaHoraExtra?.horarioTrabalho}, com 30 minutos de intervalo para refeição e descanso, folgando apenas 2 (dois) domingos no mês. Todavia, a 1ª Reclamada não pagou corretamente as horas extras, ressaltando-se que o reclamante laborou nos seguintes feriados:
+Durante o contrato de trabalho a parte autora trabalhou em escala 12x36, em média, das ${formData?.jornadaHoraExtra?.horarioTrabalho}, com ${formData?.jornadaHoraExtra?.intervaloEfetivo} de intervalo para refeição e descanso, folgando apenas ${formData?.jornadaHoraExtra?.folgaDomingo} (${DiasArray.find((dia) => dia.number === formData?.jornadaHoraExtra?.folgaDomingo)?.name}) domingos no mês. Todavia, a 1ª Reclamada não pagou corretamente as horas extras, ressaltando-se que o reclamante laborou nos seguintes feriados:
 </p>
 
 <p>
@@ -1746,7 +1765,7 @@ Portanto, podemos concluir que o Reclamante faz jus ao recebimento das horas ext
 Deverão ser deduzidos os valores já pagos sob o mesmo título.
 </p>
 
-<h3>DO PEDIDO CONDICIONADO A ESTA TESE:</h3>
+<span style="font-weight: bold;">DO PEDIDO CONDICIONADO A ESTA TESE:</span>
 
 <p>
 Seja declarada a descaracterização do acordo de compensação de horas/rodízio;
@@ -1765,14 +1784,14 @@ Seja reconhecida a nulidade de eventual sistema de banco de horas que vier a ser
 <h3>INTERVALO INTRAJORNADA</h3>
 
 <p>
-A jornada acima descrita (30 minutos de intervalo), contraria o disposto no art. 71 da CLT (Cláusula XX, da Convenção Coletiva de Trabalho), que prevê um intervalo de 1h para refeição e descanso, além do pactuado contratualmente ${formData?.jornadaHoraExtra?.intervaloContrato}. 
+A jornada acima descrita (${formData?.jornadaHoraExtra?.intervaloEfetivo} de intervalo), contraria o disposto no art. 71 da CLT (Cláusula XX, da Convenção Coletiva de Trabalho), que prevê um intervalo de 1h para refeição e descanso, além do pactuado contratualmente ${formData?.jornadaHoraExtra?.intervaloContrato}. 
 </p>
 
 <p>
 Assim, o Reclamante tem direito de receber 1h00 hora extra diária, acrescida do percentual convencional e, na sua falta, o legal de 50%, para as prestadas de segunda a sábado, além de horas extras laboradas aos Domingos/Feriados, as quais devem ser pagas em dobro, em razão da não concessão de intervalo para refeição e descanso, nos termos do art. 71, § 4º da CLT, incluindo em sua base de cálculo o adicional de periculosidade e adicional noturno, por terem natureza salarial, bem como seus reflexos nos DSR’s, aviso prévio, 13º Salário; Férias (+1/3) e FGTS + 40%. Deverão ser deduzidos os valores já pagos sob o mesmo título.
 </p>
 
-<h3>DO PEDIDO CONDICIONADO A ESTA TESE:</h3>
+<span style="font-weight: bold;">DO PEDIDO CONDICIONADO A ESTA TESE:</span>
 
 <table border="1" cellspacing="0" cellpadding="10" width="100%">
   <thead>
@@ -1988,7 +2007,7 @@ ${
   formData?.salarioBeneficio?.tinhaDireitoSemReceber &&
   formData?.salarioBeneficio?.adicionaisDevidos &&
   formData?.salarioBeneficio?.adicionaisDevidos.includes(
-    OpcoesAdicionais.Noturno,
+    OpcoesAdicionais.NOTURNO,
   )
     ? `
     <h3>DO ADICIONAL NOTURNO</h3>
@@ -2119,7 +2138,8 @@ ${
     Deverão ser deduzidos os valores eventualmente depositados em conta vinculada e comprovados a mesmo título mediante juntada das guias "GR", "RE" e “GFIP”.
     </p>
     
-    <h3>DO PEDIDO CONDICIONADO A ESTA TESE:</h3>
+    <span style="font-weight: bold;">DEPÓSITOS DA DIFERENÇA DO FGTS (${formData?.salarioBeneficio?.periodoFgts}).............................R$</span>
+    <span style="font-weight: bold;">DO PEDIDO CONDICIONADO A ESTA TESE:</span>
     
     <table border="1" cellspacing="0" cellpadding="10" width="100%">
       <thead>
@@ -2147,7 +2167,7 @@ ${
     : ``
 }
 ${
-  formData?.salarioBeneficio?.guiasFgts === GuiasFGTS.Sim &&
+  formData?.salarioBeneficio?.guiasFgts === GuiasFGTS.Nao &&
   formData?.salarioBeneficio?.anotacaoCtpsAvisoPrevio
     ? `
   
@@ -2230,7 +2250,7 @@ Portanto, requer-se que a Reclamada seja compelida a restituir os valores pagos 
 }
 
 ${
-  formData?.condicoesSegurancaTrabalho?.usavaVeiculoEmpresa
+  !formData?.condicoesSegurancaTrabalho?.empresaPagavaCombustivel
     ? `
   <h2 class="section">DO REEMBOLSO DO COMBUSTÍVEL</h2>
 
@@ -2251,7 +2271,7 @@ Isso porque, o valor fornecido ao Reclamante para o abastecimento do veículo <s
 </p>
 
 <p>
-Dessa forma, o Reclamante teve que arcar com o custo da diferença de seu próprio bolso, no valor médio de <span class="bold">R$ ${formData?.condicoesSegurancaTrabalho?.valorGastoReclamante || 'R$ 200,00'}</span> mensais.
+Dessa forma, o Reclamante teve que arcar com o custo da diferença de seu próprio bolso, no valor médio de <span class="bold">R$ ${formatarParaReal(valorCombustivelGastoReclamante) || 'R$ 00,00'}</span> mensais.
 </p>
 
 <p>
@@ -2259,7 +2279,7 @@ Tal conduta viola o art. 468 da CLT, que veda qualquer alteração lesiva ao con
 </p>
 
 <p>
-Portanto, requer-se a condenação da Reclamada ao pagamento do reembolso das despesas com combustível suportadas pelo Reclamante durante todo o período contratual, no valor médio de <span class="bold">R$ ${formData?.condicoesSegurancaTrabalho?.valorGastoReclamante || 'R$ 200,00'}</span> mensais, com correção monetária e juros legais.
+Portanto, a Reclamada deve ser condenada a pagar ao Reclamante os valores mensais, referente ao reembolso das despesas com combustível durante todo o contrato de trabalho, eis que tais valores jamais foram reembolsados, no valor médio de R$ ${formatarParaReal(valorCombustivelEmpresa)} mensais.
 </p>
 
   `
@@ -2272,13 +2292,8 @@ ${
     <h2 class="section">DO SALÁRIO-FAMÍLIA</h2>
 
 <p>
-A Reclamante tem <span class="bold">${formData?.condicoesSegurancaTrabalho?.quantidadeFilhos || 'duas'}</span> filhos menores de 14 anos de idade,  ${Array.from(
-        {
-          length: Number(formData?.condicoesSegurancaTrabalho.quantidadeFilhos),
-        },
-      )
-        .map(() => `[Quantidade filhos] com [idade filho] anos`)
-        .join(' e ')}.
+A Reclamante tem <span class="bold">${formData?.condicoesSegurancaTrabalho?.quantidadeFilhos || 'duas'}</span> filhos menores de 14 anos de idade,
+sendo (quantidade de filhos) de X (idade) anos de idade e outra filha de XX (idade) anos de idade (doc. anexo).
 </p>
 
 <p>
@@ -2308,7 +2323,6 @@ ${
 <p>
 A primeira Reclamada descontou indevidamente valores das verbas salariais do Reclamante, conforme tabela abaixo:
 </p>
-
 <table border="1" cellspacing="0" cellpadding="6" width="100%">
   <thead>
     <tr style="background-color: #f0f0f0;">
@@ -2319,37 +2333,42 @@ A primeira Reclamada descontou indevidamente valores das verbas salariais do Rec
   </thead>
   <tbody>
     ${
-      formData?.salarioBeneficio?.descontosHoleriteSelecionados?.length
-        ? formData?.salarioBeneficio?.descontosHoleriteSelecionados
-            .map((item) => {
-              return `
-              <tr>
-                <td>${formData?.salarioBeneficio?.mesAtraso || '00/0000'}</td>
-                <td>${item}</td>
-                <td>R$ 0,00</td>
-              </tr>
-            `;
-            })
+      formData?.salarioBeneficio?.descontosSelecionados?.length
+        ? formData.salarioBeneficio.descontosSelecionados
+            .map(
+              (item) => `
+                <tr>
+                  <td>${formData.salarioBeneficio.mesAtraso || '00/0000'}</td>
+                  <td>${item}</td>
+                  <td>R$ 0,00</td>
+                </tr>
+              `,
+            )
             .join('')
-        : `
-        <tr>
-          <td>00/0000</td>
-          <td>EXEMPLO</td>
-          <td>R$</td>
-        </tr>
-        <tr>
-          <td>00/0000</td>
-          <td>EXEMPLO</td>
-          <td>R$</td>
-        </tr>
-      `
+        : ''
+    }
+    ${
+      formData?.salarioBeneficio?.descontosHoleriteSelecionados?.length
+        ? formData.salarioBeneficio.descontosHoleriteSelecionados
+            .map(
+              (item) => `
+                <tr>
+                  <td>${formData.salarioBeneficio.mesAtraso || '00/0000'}</td>
+                  <td>${item} (HOLERITE)</td>
+                  <td>R$ 0,00</td>
+                </tr>
+              `,
+            )
+            .join('')
+        : ''
     }
     <tr>
       <td colspan="2" style="text-align: right;"><strong>VALOR TOTAL</strong></td>
-      <td style="text-align: right;"><strong>R$ ${formData?.salarioBeneficio?.valorTotalDescontosHolerite || '0,00'},00</strong></td>
+      <td style="text-align: right;"><strong>R$ ${formatarParaReal(valorTotalDescontos + valorTotalDescontosHolerite) || '0,00'}</strong></td>
     </tr>
   </tbody>
 </table>
+
 
 <p>
 Entretanto, estes descontos foram efetuados <span class="bold">indevidamente</span>.
@@ -2364,7 +2383,7 @@ Não obstante, os descontos relativos a “danos” e “multas” foram efetuad
 </p>
 
 <p>
-No mesmo sentido, descontos relacionados a “materiais”, “telefone”, “almoxarifado” e “ferramentas” também se mostram indevidos, já que o Reclamante jamais perdeu qualquer material, tampouco recebeu advertências formais a esse respeito.
+Quanto aos descontos de ${formData?.salarioBeneficio?.descontosSelecionados?.map((item) => `"${item}"`).join(', ')}${formData?.salarioBeneficio?.descontosHoleriteSelecionados?.length ? `, ${formData?.salarioBeneficio?.descontosHoleriteSelecionados?.map((item) => `"${item}"(HOLERITE)`).join(', ')}` : ''}, estes também se mostram indevidos, eis que, o obreiro jamais perdeu qualquer material ou ferramental.
 </p>
 
 <p>
@@ -2512,8 +2531,12 @@ ${
     : ``
 }
 ${
-  formData?.salarioBeneficio?.adicionais?.includes(Adicional.INSALUBRIDADE) ||
-  formData?.salarioBeneficio?.adicionais?.includes(Adicional.PERICULOSIDADE)
+  formData?.salarioBeneficio?.adicionaisDevidos?.includes(
+    OpcoesAdicionais.INSALUBRIDADE,
+  ) ||
+  formData?.salarioBeneficio?.adicionaisDevidos?.includes(
+    OpcoesAdicionais.PERICULOSIDADE,
+  )
     ? `
     <p><strong>INSALUBRIDADE/ PERICULOSIDADE</strong> - Seja determinada a realização de perícia técnica para apuração de insalubridade, com vistoria das atividades e local de trabalho do reclamante, bem como o deferimento para acompanhamento do reclamante. Requer ainda, seja cumprido o disposto no artigo 474 do CPC que determina ao Juízo que designe dia, hora e lugar em que terá início à diligência;</p>
     
@@ -2640,7 +2663,7 @@ restando a v. Exa. Em consonância com o artigo 460 da CLT, indicar o valor a se
         formData?.salarioBeneficio?.nulidade &&
         formData?.salarioBeneficio?.outroAdicionalDevidos &&
         formData?.salarioBeneficio?.adicionaisDevidos?.includes(
-          OpcoesAdicionais.Insalubridade,
+          OpcoesAdicionais.INSALUBRIDADE,
         )
           ? `
         
@@ -2932,10 +2955,12 @@ restando a v. Exa. Em consonância com o artigo 460 da CLT, indicar o valor a se
 ${
   formData?.salarioBeneficio?.adicionaisRecebidos &&
   ((formData?.salarioBeneficio?.adicionais &&
-    formData?.salarioBeneficio?.adicionais.includes(Adicional.INSALUBRIDADE)) ||
+    formData?.salarioBeneficio?.adicionais.includes(
+      OpcoesAdicionais.INSALUBRIDADE,
+    )) ||
     (formData?.salarioBeneficio?.adicionais &&
       formData?.salarioBeneficio?.adicionais.includes(
-        Adicional.PERICULOSIDADE,
+        OpcoesAdicionais.PERICULOSIDADE,
       )))
     ? `
   <p>

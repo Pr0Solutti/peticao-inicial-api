@@ -14,17 +14,11 @@ export enum OpcoesDescontos {
   Celular = 'Celular',
   Outros = 'Outros',
 }
-export enum Adicional {
+export enum OpcoesAdicionais {
   INSALUBRIDADE = 'Insalubridade',
   PERICULOSIDADE = 'Periculosidade',
   NOTURNO = 'Noturno',
   OUTROS = 'Outros',
-}
-export enum OpcoesAdicionais {
-  Insalubridade = 'Insalubridade',
-  Periculosidade = 'Periculosidade',
-  Noturno = 'Noturno',
-  Outros = 'Outros',
 }
 
 export enum Riscos {
@@ -287,9 +281,9 @@ export class DadosSalarioBeneficioDto {
   adicionaisRecebidos?: boolean;
 
   @IsOptional()
-  @IsEnum(Adicional)
+  @IsEnum(OpcoesAdicionais)
   @IsString({ each: true })
-  adicionais?: Adicional[];
+  adicionais?: OpcoesAdicionais[];
 
   @IsOptional()
   @IsEnum(Riscos)
