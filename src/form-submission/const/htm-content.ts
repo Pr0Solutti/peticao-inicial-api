@@ -320,7 +320,7 @@ Logo, pugna pela procedência total da ação e declaração do vínculo emprega
 </p>
 
 <p>
-Ainda, considerando a rescisão contratual firmada em <span class="bold">${formData?.salarioBeneficio?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>, sem a correta consideração do período sem registro, deverá a Reclamada ser condenada ao pagamento das diferenças das verbas rescisórias, a saber:
+Ainda, considerando a rescisão contratual firmada em <span class="bold">${formData?.salarioBeneficio?.dataAdmissaoSemRegistro ?? 'DATA NÃO INFORMADA'}</span>, sem a correta consideração do período sem registro, deverá a Reclamada ser condenada ao pagamento das diferenças das verbas rescisórias, a saber:
 <span class="bold">saldo de salário, aviso prévio, férias vencidas e/ou proporcionais + 1/3, 13º salários de [inserir anos a receber], FGTS do período laborado, inclusive sobre as verbas rescisórias acima pleiteadas, acrescido da multa fundiária de 40%, e Recolhimentos Previdenciários ao INSS</span>.
 </p>
 
@@ -330,7 +330,7 @@ Protesta pela compensação de valores comprovadamente quitados sob idêntico t�
 
 <h3>PEDIDOS DEPENDENTES</h3>
 <p>
-Seja reconhecido o vínculo com a empregadora no período de <span class="bold">${formData?.salarioBeneficio?.dataAdmissao ?? formData?.salarioBeneficio?.dataAdmissaoSemRegistro}</span>, com salário mensal de <span class="bold">R$ ${formatarParaReal(salario)}</span>, bem como anotação na CTPS do obreiro na função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps}</span>, sob pena de multa a ser estipulada por este MM. Juiz, a qual é imprescritível.
+Seja reconhecido o vínculo com a empregadora no período de <span class="bold">${formData?.salarioBeneficio?.dataAdmissaoSemRegistro}</span>, com salário mensal de <span class="bold">R$ ${formatarParaReal(salario)}</span>, bem como anotação na CTPS do obreiro na função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps}</span>, sob pena de multa a ser estipulada por este MM. Juiz, a qual é imprescritível.
 </p>
 
 <p>
