@@ -60,28 +60,54 @@ export const htmlContentDoc = (formData: CreateFormSubmissionDto) => {
     h1 { font-size: 20px; }
     h2 { font-size: 18px; margin-top: 30px; }
     h3 { font-size: 16px; margin-top: 20px; }
-    p { line-height: 1.6; text-align: justify; }
+    p { line-height: 1.6; text-align: justify; font-size: 11.7px; margin-top: 10px; }
     .section { margin-top: 20px; }
     .bold { font-weight: bold; }
+    .page-break {
+      page-break-before: always;
+    }
     ul { margin-left: 20px; }
+    body {
+    margin-left: 3cm;
+    margin-right: 2cm;
+    margin-top: 2cm;
+    margin-bottom: 2cm;
+  }
   </style>
 </head>
 <body>
 
-<h1>EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) DA VARA DO TRABALHO DE ${(formData?.reclamante?.ultiamCidadeTrabalho ?? 'CIDADE NÃO INFORMADA').toUpperCase()}/UF</h1>
+<p style="text-align: center;">EXCELENTÍSSIMO(A) SENHOR(A) DOUTOR(A) JUIZ(A) DA VARA DO TRABALHO DE ${(formData?.reclamante?.ultiamCidadeTrabalho ?? 'CIDADE NÃO INFORMADA').toUpperCase()} - UF</p>
+<div class="page-break"></div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div style="text-align: center; justify-content: center;>
+<div style="text-align: justify; line-height: 1.6; font-size: 14px;">
+  <p style="text-align: end; margin: 0;">
+    ${formData?.reclamante.nome?.toUpperCase() ?? 'NOME NÃO INFORMADO'},
+    ${formData?.reclamante.nacionalidade ?? 'NACIONALIDADE NÃO INFORMADA'},
+    ${formData?.reclamante.estadoCivil ?? 'ESTADO CIVIL NÃO INFORMADO'}, 
+  </p>
+  <p style="margin-top: 0;">
+    portador(a) do RG nº
+    ${formData?.reclamante.rg ?? 'RG NÃO INFORMADO'} SSP/${formData?.reclamante.uf ?? 'UF NÃO INFORMADA'}, inscrito(a) no CPF sob o nº
+    ${formData?.reclamante.cpf ?? 'CPF NÃO INFORMADO'} e no PIS sob o nº ${formData?.reclamante.pis ?? 'PIS NÃO INFORMADO'}, portador(a) da CTPS nº ${formData?.reclamante.ctpsNumero ?? 'CTPS NÃO INFORMADO'},
+    série ${formData?.reclamante.serie ?? 'SÉRIE NÃO INFORMADA'}, filho(a) de ${formData?.reclamante.nomeMae ?? 'MÃE NÃO INFORMADA'}, nascido(a) aos ${formData?.reclamante.dataNascimento ?? 'DATA NÃO INFORMADA'},
+    residente à ${formData?.reclamante.rua ?? 'ENDEREÇO NÃO INFORMADO'},
+    ${formData?.reclamante.bairro ?? 'BAIRRO NÃO INFORMADO'} - ${formData?.reclamante.cidade ?? 'CIDADE NÃO INFORMADA'}/${formData?.reclamante.uf ?? 'UF NÃO INFORMADA'} (CEP ${formData?.reclamante.cep ?? 'CEP NÃO INFORMADO'}),
+    com contato eletrônico para recebimento de notificações através do e-mail ${formData?.reclamante.email ?? 'E-MAIL NÃO INFORMADO'}, vem, através de sua advogada abaixo assinada, à presença de V. Exa., propor:
+  </p>
+</div>
 
-<p>
-  ${formData?.reclamante.nome ?? 'NOME NÃO INFORMADO'},
-  ${formData?.reclamante.nacionalidade ?? 'NACIONALIDADE NÃO INFORMADA'},
-  ${formData?.reclamante.estadoCivil ?? 'ESTADO CIVIL NÃO INFORMADO'}, portador(a) do RG nº ${formData?.reclamante.rg ?? 'RG NÃO INFORMADO'} SSP/${formData?.reclamante.uf ?? 'UF NÃO INFORMADA'}, inscrito(a) no CPF sob o nº 
-  ${formData?.reclamante.cpf ?? 'CPF NÃO INFORMADO'} e no PIS sob o nº ${formData?.reclamante.pis ?? 'PIS NÃO INFORMADO'}, portador(a) da CTPS nº ${formData?.reclamante.ctpsNumero ?? 'CTPS NÃO INFORMADO'}, 
-  série ${formData?.reclamante.serie ?? 'SERIE NÃO INFORMADA'}, filho(a) de ${formData?.reclamante.nomeMae ?? 'MÁE NÃO INFORMADA'}, nascido(a) aos ${formData?.reclamante.dataNascimento ?? 'DATA NÃO INFORMADA'}, 
-  residente à ${formData?.reclamante.rua ?? 'ENDERECO NÃO INFORMADO'}, 
-  ${formData?.reclamante.bairro ?? 'BAIRRO NÃO INFORMADO'} - ${formData?.reclamante.cidade ?? 'CIDADE NÃO INFORMADA'}/${formData?.reclamante.uf ?? 'UF NÃO INFORMADA'} (CEP ${formData?.reclamante.cep ?? 'CEP NÃO INFORMADO'}), com contato eletrônico 
-  para recebimento de notificações através do e-mail ${formData?.reclamante.email ?? 'E-MAIL NÃO INFORMADO'}, vem, através de sua advogada abaixo assinada, à presença de V. Exa., propor:
-</p>
 
-<h2> RECLAMAÇÃO TRABALHISTA</h2>
+<p style="text-align: center; font-size: 15px;"> RECLAMAÇÃO TRABALHISTA</p>
 
 <p>
   ${(formData?.reclamada.reclamadas ?? [])
@@ -89,32 +115,27 @@ export const htmlContentDoc = (formData: CreateFormSubmissionDto) => {
       (rec, index) => `
         ${index !== 0 ? `${index + 1}ª` : `a ser processada pelo RITO ORDINÁRIO, em face de`}  
         <span class="bold">${rec.nome}</span>, pessoa jurídica de direito privado e/ou público, devidamente inscrita no CNPJ sob o nº ${rec.cnpj}, estabelecida na ${rec.rua}, ${rec.bairro} - ${rec.cidade}/${rec.uf} (CEP ${rec.cep}), com endereço eletrônico através do e-mail: ${rec.email} e telefone ${rec.telefone}, 
-        ${index === 0 && formData?.reclamada.reclamadas.length > 1 ? `e subsidiariamente:` : formData?.reclamada.reclamadas && formData?.reclamada.reclamadas.length === index + 1 ? `pelos motivos de fato e de direito adiante expendidos.` : ``}
+        ${index === 0 && formData?.reclamada.reclamadas.length > 1 ? `e subsidiariamente: <br>` : formData?.reclamada.reclamadas && formData?.reclamada.reclamadas.length === index + 1 ? `pelos motivos de fato e de direito adiante expendidos.` : ``}
       `,
     )
     .join('<br>')}
 </p>
+</div>
+<div class="page-break"></div>
 
+<p style="font-size: 15px;">DOS FATOS E FUNDAMENTOS JURÍDICOS</p>
+<p style="font-size: 11px;">DO CONTRATO DE TRABALHO </p>
 
-<h2>DOS FATOS
-DO CONTRATO DE TRABALHO
-</h2>
-<h3>
-Início do tópico - geral${formData?.salarioBeneficio?.modalidadeDispensa === ModalidadeDispensa.Outros ? `("Verificar modalidade da dispensa - ${formData?.salarioBeneficio?.modalidadeDispensa}")` : ``}
-</h3>
 <p>
-  
 A parte reclamante foi contratada em <span class="bold">${formData?.salarioBeneficio?.dataAdmissao ?? 'DATA NÃO INFORMADA'}</span>, exercendo por último a função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps && formData?.salarioBeneficio?.cargoCtps.toUpperCase()}</span>, sob a remuneração de <span class="bold">R$ ${formatarParaReal(salario)} </span> por mês, 
 ${formData?.salarioBeneficio?.adicionais && formData?.salarioBeneficio?.adicionais?.length > 0 ? `acrescido de <span class="bold">${formData?.salarioBeneficio?.adicionais.map((adc) => adc.toUpperCase()).join('/')}</span>,` : ''} sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.salarioBeneficio?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>. 
 </p>
 <p>Em razão do cargo, competia a parte autora as seguintes atribuições ${formData?.salarioBeneficio?.atividadesDesempenhadas}.</p>
 
-<h2>VARIAÇÕES</h2>
 ${
   formData?.salarioBeneficio?.trabalhouSemRegistroCTPS ===
   TrabalhouSemRegistroCTPS.Sim
     ? `
-  <h2>SEM REGISTRO</h2>
 <p>
 A parte reclamante foi admitida em <span class="bold">${formData?.salarioBeneficio?.dataAdmissaoSemRegistro ? formData?.salarioBeneficio?.dataDispensaSemRegistro : 'DATA NÃO INFORMADA'}</span>, sem registro em sua CTPS, exercendo por último a função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps?.toUpperCase()}</span>, sob a remuneração de R$ ${formatarParaReal(salario)} por mês, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.salarioBeneficio?.dataDispensaSemRegistro ?? 'DATA NÃO INFORMADA'}</span>.
 </p>
@@ -125,7 +146,6 @@ ${
   formData?.salarioBeneficio?.trabalhouSemRegistroCTPS ===
   TrabalhouSemRegistroCTPS.ApenasUmPeriodo
     ? `
-  <h2>COM PERÍODO SEM REGISTRO </h2>
 <p>
 A parte reclamante foi admitida em <span class="bold">${formData?.salarioBeneficio?.dataAdmissaoSemRegistro ?? 'DATA NÃO INFORMADA'}</span>, apenas tendo sido registrada na CTPS em <span class="bold">${formData?.salarioBeneficio?.dataAdmissao ?? 'DATA NÃO INFORMADA'}</span>, exercendo por último a função de ${formData?.salarioBeneficio.cargoCtps?.toUpperCase()}, sob a remuneração de R$ ${formatarParaReal(salario)} por mês, acrescido de 30% do adicional de periculosidade e produção, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.salarioBeneficio?.dataDispensaSemRegistro ?? 'DATA NÃO INFORMADA'}</span>.
 </p>
@@ -139,14 +159,13 @@ ${
   formData?.salarioBeneficio?.avisoPrevio === AvisoPrevio.Indenizado
     ? `
 <p>
-  <h2>SEM JUSTA CAUSA – AVISO PRÉVIO INDENIZADO</h2>
 O contrato de trabalho se encerrou mediante dispensa, sem justa causa, pelo empregador em ${formData?.salarioBeneficio?.dataDispensa}, com aviso prévio indenizado ${formData?.salarioBeneficio?.anotacaoCtpsAvisoPrevio ? `, projetando seu contrato de trabalho até <span class="bold">${formData?.salarioBeneficio?.dataDispensaAvisoPrevio}, nos termos da Lei 12.506/2011</span>` : ``}.
 </p>
   `
     : formData?.salarioBeneficio?.modalidadeDispensa ===
           ModalidadeDispensa.SemJustaCausa &&
         formData?.salarioBeneficio?.avisoPrevio === AvisoPrevio.Trabalhando
-      ? `<h2>SEM JUSTA CAUSA – AVISO PRÉVIO TRABALHADO</h2>
+      ? `
 <p>
 O contrato de trabalho se encerrou mediante dispensa, sem justa causa, em ${formData?.salarioBeneficio?.dataDispensa} ${
           formData?.salarioBeneficio?.anotacaoCtpsAvisoPrevio
@@ -163,7 +182,7 @@ ${
     ModalidadeDispensa.Trabalhando ||
   formData?.salarioBeneficio?.modalidadeDispensa ===
     ModalidadeDispensa.RescisaoIndireta
-    ? `<h2>TRABALHANDO (sem aviso prévio e multa 40% do FGTS)</h2>
+    ? `
 Ressalte-se que o contrato de trabalho permanece vigente, razão pela qual pugna-se pelo recebimento de todas as verbas pleiteadas e seus reflexos, sejam elas vencidas e/ou vincendas.
 `
     : ``
@@ -176,7 +195,6 @@ ${
   formData?.salarioBeneficio?.outraFormaAvisoPrevio ===
     OutraFormaAvisoPrevio.NaoCumpriu
     ? `
-  <h2>PEDIDO DE DEMISSÃO – AVISO PRÉVIO NÃO CUMPRIDO</h2>
   <p>
     O contrato de trabalho se encerrou mediante pedido de demissão pelo empregado aos ${formData?.salarioBeneficio?.dataDispensa}, não tendo cumprido o aviso prévio.
   </p>`
@@ -189,7 +207,6 @@ ${
   formData?.salarioBeneficio?.outraFormaAvisoPrevio ===
     OutraFormaAvisoPrevio.CumpriuEmCasa
     ? `
-  <h2>PEDIDO DE DEMISSÃO – AVISO PRÉVIO CUMPRIDO</h2>
   <p>
     O contrato de trabalho se encerrou mediante pedido de demissão pelo empregado aos ${formData?.salarioBeneficio?.dataDispensa}, tendo cumprido o aviso prévio de forma trabalhada até ${formData?.salarioBeneficio?.dataDispensa}.
   </p>`
@@ -199,7 +216,6 @@ ${
   formData?.salarioBeneficio?.modalidadeDispensa ===
   ModalidadeDispensa.JustaCausa
     ? `
-  <h2>JUSTA CAUSA</h2>
   <p>
     O contrato de trabalho foi extinto mediante demissão por justa causa em ${formData?.salarioBeneficio?.dataDispensa || ''}, sob a alegação de <span class="bold">${formData?.salarioBeneficio?.modalidadeDispensa}</span>.
     ${formData?.salarioBeneficio?.advertenciaSuspensao ? 'Importante destacar que o reclamante recebeu advertências prévias.' : ''}
@@ -210,14 +226,12 @@ ${
   formData?.salarioBeneficio?.modalidadeDispensa ===
     ModalidadeDispensa.SemJustaCausa && formData?.salarioBeneficio?.desvioFuncao
     ? `
-    <h2>SEM JUSTA CAUSA – RETIFICAÇÃO CTPS</h2>
       <p>
           A parte reclamante foi admitida em ${formData?.salarioBeneficio?.dataAdmissao ?? 'DATA NÃO INFORMADA'}, tendo sido registrado na função de ${formData?.salarioBeneficio?.cargoCtps}, porém, ${formData?.salarioBeneficio?.cargoDesempenhado ? `efetivamente, exercia as atribuições de ${formData?.salarioBeneficio?.cargoDesempenhado} desde ${formData?.salarioBeneficio?.dataAdmissao ?? 'DATA NÃO INFORMADA'},` : ``} sendo que a empregadora não procedeu a alteração tempestiva da CTPS e/ou o remunerou corretamente.
       </p>
     `
     : ``
 }
-<h2>CONTRATOS DE TRABALHO</h2>
  A parte reclamante foi contratada pela empregadora em: <br>
 ${
   formData.salarioBeneficio.trabalhouSemRegistroCTPS !==
@@ -243,22 +257,16 @@ ${
   `
     : ``
 }
-
-
-<h2>Final do tópico - fixo:</h2>
   <p>
     Por fim, acresça-se que a parte autora teve como último local de trabalho ${formData?.informacoesFinais.enderecoUltimoTrabalho}, em prol da [preenchimento manual, para caso de terceirização], sendo este o Fórum Trabalhista o competente para processar o presente feito
   </p>
 
-<h2 class="section">DOS FUNDAMENTOS JURÍDICOS</h2>
-
-<h3>RESPONSABILIDADE DAS RECLAMADAS</h3>
+<p style="font-weight: bold font-size: 12px">RESPONSABILIDADE DAS RECLAMADAS</p>
 ${
   formData?.reclamada?.temMaisReclamadas &&
   formData?.reclamada?.tipoResposabilidadeEmpresas ===
     ResponsabilidadeEmpresa.Subsidiaria
     ? `
-  <h3>RESPONSABILIDADE SUBSIDIÁRIA – terceirização</h3>
 <p>
 Embora o reclamante tenha sido contratado pela primeira reclamada, durante todo o pacto laboral sempre desempenhou suas funções em benefício da segunda reclamada que, na forma da Súmula 331, do C.TST, deverá responder <span class="bold">SUBSIDIARIAMENTE</span> pelos créditos trabalhistas deferidos na presente demanda.
 </p>`
@@ -315,12 +323,12 @@ As reclamadas simularam a contratação do reclamante como cooperado. Tendo part
 }
 
 
-<h2 class="section">DAS NULIDADES</h2>
+<p>DAS NULIDADES</>
 ${
   formData?.salarioBeneficio?.trabalhouSemRegistroCTPS ===
     TrabalhouSemRegistroCTPS.Sim ||
   !formData?.salarioBeneficio?.seguroDesempregoSemRegistro
-    ? `<h3>DA RELAÇÃO DE EMPREGO – RECONHECIMENTO DE VÍNCULO EMPREGATÍCIO - VERBAS SALARIAIS E RESCISÓRIAS</h3>
+    ? `<p style="text-align: center">DA RELAÇÃO DE EMPREGO – RECONHECIMENTO DE VÍNCULO EMPREGATÍCIO - VERBAS SALARIAIS E RESCISÓRIAS</p>
 <p>
 Conforme narrado ao tópico do contrato de trabalho, a parte autora prestou serviços sem que houvesse a regularização da sua CTPS, trabalhando sem registro no período de <span class="bold">${formData?.salarioBeneficio?.dataAdmissaoSemRegistro} a ${formData?.salarioBeneficio?.dataDispensaSemRegistro}</span>.
 </p>
@@ -344,7 +352,7 @@ Ainda, considerando a rescisão contratual firmada em <span class="bold">${formD
 Protesta pela compensação de valores comprovadamente quitados sob idêntico título, bem como a anotação da correta data de início e baixa na CTPS autoral, referente ao período contratual pleiteado.
 </p>
 
-<h3>PEDIDOS DEPENDENTES</h3>
+<p>PEDIDOS DEPENDENTES</p>
 <p>
 Seja reconhecido o vínculo com a empregadora no período de <span class="bold">${formData?.salarioBeneficio?.dataAdmissaoSemRegistro}</span>, com salário mensal de <span class="bold">R$ ${formatarParaReal(salario)}</span>, bem como anotação na CTPS do obreiro na função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps}</span>, sob pena de multa a ser estipulada por este MM. Juiz, a qual é imprescritível.
 </p>
@@ -387,7 +395,7 @@ A entrega das Guias TRCT com o código 01 para percepção do FGTS depositado, e
 
 ${
   formData?.salarioBeneficio?.acordoEmpresa
-    ? `<h3>DA NULIDADE DO “ACORDO” FORMULADO NA COMISSÃO DE CONCILIAÇÃO PRÉVIA</h3>
+    ? `<p>DA NULIDADE DO “ACORDO” FORMULADO NA COMISSÃO DE CONCILIAÇÃO PRÉVIA</p>
 
 <p>
 Após a dispensa, no ato da homologação da rescisão contratual, a Reclamada se comprometeu a proceder o pagamento R$ ${formData?.salarioBeneficio?.acordoEmpresa && formData?.salarioBeneficio?.valorAcordo}. 
@@ -418,7 +426,7 @@ Outrossim, ao chegar no dia e local da convocação, ao trabalhador não lhe é 
 Desse modo, resta caracterizada a intenção da reclamada de se locupletar às custas do trabalho alheio, beneficiando-se da mão de obra de funcionários, cuja jornada de trabalho é demasiadamente extensa, fazendo-os trabalhar em regime de horas extras, na certeza de que não terá que os remunerar de acordo com o que a Lei determina.
 </p>
 
-<h2 class="section">DA LESÃO</h2>
+<p class="section">DA LESÃO</p>
 
 <p>
 O Código Civil de 2002 consagrou de forma expressa o <span class="bold">Princípio da Boa-Fé</span> como fundamento de qualquer negócio jurídico (art. 113 do Código Civil), censurando com nulidade o contrato que o contrarie. 
@@ -473,7 +481,7 @@ Repetindo, o valor aproximado de R$ ${formData?.salarioBeneficio?.valorAcordo ? 
 Portanto, levando-se em conta que a manifestação de vontade do reclamante não era <span class="bold">LIVRE</span> no momento da realização daquela transação, o acordo extrajudicial firmado entre o reclamante e a primeira reclamada deve ser <span class="bold">ANULADO</span>, em razão da <span class="bold">lesão</span>, nos termos do art. 171, II do Código Civil.
 </p>
 
-<h2 class="section">DA COAÇÃO</h2>
+<p>DA COAÇÃO</p>
 
 <p>
 Como dito, após a dispensa, a Reclamada se comprometeu a proceder o pagamento da produção e das horas extras dos últimos meses devidas ao obreiro, condicionando, entretanto, o pagamento ao comparecimento do Reclamante perante a Comissão de Conciliação Prévia, para realização de um “acordo”.
