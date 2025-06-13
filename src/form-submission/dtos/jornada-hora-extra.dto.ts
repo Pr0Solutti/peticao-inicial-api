@@ -18,12 +18,27 @@ export enum OpcoesJornada {
   Outros = 'Outros',
 }
 
-export enum SabadosTrabalhados {
+export enum DiasTrabalhados {
   Um = '1',
   Dois = '2',
   Tres = '3',
   Todos = 'Todos',
 }
+
+export const DiasArray = [
+  {
+    number: DiasTrabalhados.Um,
+    name: 'Um',
+  },
+  {
+    number: DiasTrabalhados.Dois,
+    name: 'Dois',
+  },
+  {
+    number: DiasTrabalhados.Tres,
+    name: 'Tres',
+  },
+];
 
 export enum SimNaoAlternados {
   Sim = 'Sim',
@@ -82,13 +97,17 @@ export class DadosJornadaHoraExtraDto {
   @IsEnum(OpcoesJornada)
   jornadaOutroTexto?: OpcoesJornada;
 
-  @IsEnum(SabadosTrabalhados)
+  @IsEnum(DiasTrabalhados)
   @IsNotEmpty({ message: 'O número de sábados por mês é obrigatório.' })
-  sabadosPorMes: SabadosTrabalhados;
+  sabadosPorMes: DiasTrabalhados;
 
-  @IsEnum(SabadosTrabalhados)
+  @IsEnum(DiasTrabalhados)
+  @IsNotEmpty({ message: 'O número de domingos folga por mês é obrigatório.' })
+  folgaDomingo: DiasTrabalhados;
+
+  @IsEnum(DiasTrabalhados)
   @IsNotEmpty({ message: 'O número de domingos por mês é obrigatório.' })
-  domingosPorMes: SabadosTrabalhados;
+  domingosPorMes: DiasTrabalhados;
 
   @IsEnum(SimNaoAlternados)
   @IsNotEmpty({ message: 'Informe se trabalhava em feriados.' })

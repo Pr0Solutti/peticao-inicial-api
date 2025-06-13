@@ -16,6 +16,7 @@ import {
   CondicaoEspecial,
 } from '../dtos/condicoes-seguranca-trabalho.dto';
 import { formatarParaReal } from 'src/utils/formatar';
+import { DiasArray } from '../dtos/jornada-hora-extra.dto';
 
 export const htmlContentDoc = (formData: CreateFormSubmissionDto) => {
   const salario = parseRealParaFloat(
@@ -104,7 +105,7 @@ ${
     ? `
   <h2>SEM REGISTRO</h2>
 <p>
-A parte reclamante foi admitida em <span class="bold">${formData?.salarioBeneficio?.dataAdmissaoParadigma ? formData?.salarioBeneficio?.dataDispensaSemRegistro : 'DATA NÃO INFORMADA'}</span>, sem registro em sua CTPS, exercendo por último a função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps?.toUpperCase()}</span>, sob a remuneração de R$ ${formatarParaReal(salario)} por mês, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.salarioBeneficio?.dataDispensa ?? 'DATA NÃO INFORMADA'}</span>.
+A parte reclamante foi admitida em <span class="bold">${formData?.salarioBeneficio?.dataAdmissaoSemRegistro ? formData?.salarioBeneficio?.dataDispensaSemRegistro : 'DATA NÃO INFORMADA'}</span>, sem registro em sua CTPS, exercendo por último a função de <span class="bold">${formData?.salarioBeneficio?.cargoCtps?.toUpperCase()}</span>, sob a remuneração de R$ ${formatarParaReal(salario)} por mês, sendo que o contrato foi encerrado sem justa causa em <span class="bold">${formData?.salarioBeneficio?.dataDispensaSemRegistro ?? 'DATA NÃO INFORMADA'}</span>.
 </p>
 `
     : ``
@@ -1584,7 +1585,7 @@ Assim, deve a reclamada ser impelida a indenizar ao reclamante nos valores corre
 }
 <h3>DA JORNADA DE TRABALHO - DAS HORAS EXTRAS</h3>
 <p>
-Durante o contrato de trabalho a parte autora trabalhou de ${formData?.jornadaHoraExtra?.jornadaReal}, em média, das ${formData?.jornadaHoraExtra?.horarioTrabalho}, com 30 minutos de intervalo para refeição e descanso, folgando apenas 2 (dois) domingos no mês. Todavia, a 1ª Reclamada não pagou corretamente as horas extras, ressaltando-se que o reclamante laborou nos seguintes feriados:
+Durante o contrato de trabalho a parte autora trabalhou de ${formData?.jornadaHoraExtra?.jornadaReal}, em média, das ${formData?.jornadaHoraExtra?.horarioTrabalho}, com ${formData?.jornadaHoraExtra?.intervaloEfetivo} de intervalo para refeição e descanso, folgando apenas ${formData?.jornadaHoraExtra?.folgaDomingo} (${DiasArray.find((dia) => dia.number === formData?.jornadaHoraExtra?.folgaDomingo)?.name})  domingos no mês. Todavia, a 1ª Reclamada não pagou corretamente as horas extras, ressaltando-se que o reclamante laborou nos seguintes feriados:
 </p>
 
 <p>
@@ -2562,7 +2563,7 @@ ${
     TrabalhouSemRegistroCTPS.ApenasUmPeriodo
     ? `
     <p><strong>COM REGISTRO PARCIAL</strong> - Seja reconhecido o vínculo empregatício com a 1ª Reclamada do período laborado sem 
-    registro de ${formData?.salarioBeneficio?.dataAdmissao} a ${formData?.salarioBeneficio?.dataDispensa}, e demais anotações de praxe pela reclamada, tendo em vista, que estão presentes os requisitos da pessoalidade, subordinação, não-eventualidade e onerosidade, conforme dispõem os arts. 2º e 3º da CLT;</p>
+    registro de ${formData?.salarioBeneficio?.dataAdmissaoSemRegistro} a ${formData?.salarioBeneficio?.dataDispensaSemRegistro}, e demais anotações de praxe pela reclamada, tendo em vista, que estão presentes os requisitos da pessoalidade, subordinação, não-eventualidade e onerosidade, conforme dispõem os arts. 2º e 3º da CLT;</p>
   `
     : ``
 }
